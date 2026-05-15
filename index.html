@@ -36,7 +36,6 @@
         color: #eeeeee;
       }
 
-      /* Hide VR button, ensure AR button shows */
       .a-enter-vr-button {
         display: none !important;
       }
@@ -46,21 +45,33 @@
     </style>
 
     <script>
-      // Custom script to handle the Tap-to-Place logic
+      // FIXED Tap-to-Place Logic
       AFRAME.registerComponent("tap-to-place", {
         init: function () {
-          const lantern = document.getElementById("lantern");
           const reticle = this.el;
+          const lantern = document.getElementById("lantern");
+          const scene = this.el.sceneEl;
 
-          // Listen for the user tapping the screen in AR
-          reticle.addEventListener("ar-hit-test-select", function () {
-            // 1. Make the lantern visible
-            lantern.setAttribute("visible", "true");
-            // 2. Hide the aiming reticle once placed
-            reticle.setAttribute("visible", "false");
-            // 3. Update the instructions
-            document.getElementById("instruction").innerHTML =
-              "Lantern placed! Walk around it.";
+          // Listen for a screen tap (WebXR 'select' event)
+          scene.addEventListener("select", () => {
+            // Only place the lantern IF the orange ring is currently visible on the floor
+            if (reticle.getAttribute("visible")) {
+              // 1. Copy the exact floor coordinates from the ring to the lantern
+              lantern.setAttribute(
+                "position",
+                reticle.getAttribute("position"),
+              );
+
+              // 2. Make the lantern visible!
+              lantern.setAttribute("visible", "true");
+
+              // 3. Hide the aiming ring so you don't place it again
+              reticle.setAttribute("visible", "false");
+
+              // 4. Update the text box
+              document.getElementById("instruction").innerHTML =
+                "Lantern placed! Walk around it.";
+            }
           });
         },
       });
@@ -71,7 +82,8 @@
     <div id="ui">
       <h1>🪔 AR Atapattama</h1>
       <p id="instruction">
-        Click <b>AR</b>, scan the floor, and <b>TAP</b> to place.
+        1. Point at the floor and move phone slowly.<br />2. Wait for the orange
+        ring.<br />3. <b>TAP</b> the ring to place.
       </p>
     </div>
 
@@ -80,7 +92,7 @@
     >
       <a-entity
         id="reticle"
-        ar-hit-test="target: #lantern"
+        ar-hit-test
         tap-to-place
         geometry="primitive: ring; radiusInner: 0.15; radiusOuter: 0.2"
         material="color: #ffaa00; shader: flat"
