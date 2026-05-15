@@ -2,19 +2,17 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Vesak AR Lantern</title>
+    <title>Advanced Vesak AR Lantern</title>
 
-    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
-    <!-- AR.js -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
     <style>
       body {
         margin: 0;
         overflow: hidden;
-        font-family: Arial;
+        font-family: Arial, sans-serif;
       }
 
       .overlay {
@@ -23,74 +21,154 @@
         left: 20px;
         z-index: 10;
 
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.7);
         color: white;
 
-        padding: 12px 16px;
-        border-radius: 10px;
+        padding: 15px 20px;
+        border-radius: 12px;
+        border: 1px solid #ffaa00;
+        box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);
       }
 
       .overlay h1 {
         margin: 0;
-        color: gold;
-        font-size: 18px;
+        color: #ffcc00;
+        font-size: 20px;
+        letter-spacing: 1px;
       }
 
       .overlay p {
-        margin: 5px 0 0;
-        font-size: 13px;
+        margin: 8px 0 0;
+        font-size: 14px;
+        color: #eeeeee;
       }
     </style>
   </head>
 
   <body>
     <div class="overlay">
-      <h1>🪔 Vesak AR</h1>
-      <p>Point camera at Hiro marker</p>
+      <h1>🪔 Atapattama AR</h1>
+      <p>Point your camera at the Hiro marker</p>
     </div>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-      <!-- HIRO MARKER -->
       <a-marker preset="hiro">
-        <!-- LANTERN -->
-        <a-entity
-          animation="property: rotation; to: 0 360 0; loop: true; dur: 5000"
-        >
-          <!-- MAIN BODY -->
-          <a-octahedron
-            position="0 0.5 0"
-            radius="0.4"
-            color="#ff6600"
-            material="emissive: #ff3300"
-          ></a-octahedron>
+        <a-entity position="0 1.2 0">
+          <a-entity
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear;"
+          >
+            <a-octahedron
+              radius="0.62"
+              wireframe="true"
+              color="#d4af37"
+            ></a-octahedron>
 
-          <!-- TOP -->
-          <a-cylinder
-            position="0 1 0"
-            radius="0.08"
-            height="0.15"
-            color="gold"
-          ></a-cylinder>
+            <a-octahedron
+              radius="0.6"
+              color="#ffeb99"
+              material="opacity: 0.85; transparent: true; emissive: #ff6600; emissiveIntensity: 0.6"
+            ></a-octahedron>
 
-          <!-- BOTTOM -->
-          <a-cylinder
-            position="0 0 0"
-            radius="0.08"
-            height="0.15"
-            color="gold"
-          ></a-cylinder>
+            <a-cylinder
+              position="0 0.6 0"
+              radius="0.1"
+              height="0.05"
+              color="#cc0000"
+            ></a-cylinder>
 
-          <!-- LIGHT -->
+            <a-entity position="0 -0.6 0">
+              <a-cylinder
+                position="0 0 0"
+                radius="0.1"
+                height="0.05"
+                color="#cc0000"
+              ></a-cylinder>
+              <a-cylinder
+                position="0 -0.3 0"
+                radius="0.015"
+                height="0.6"
+                color="#ffffff"
+              ></a-cylinder>
+              <a-cone
+                position="0 -0.6 0"
+                radius-bottom="0.05"
+                radius-top="0.015"
+                height="0.15"
+                color="#cc0000"
+              ></a-cone>
+            </a-entity>
+
+            <a-entity position="0.6 0 0">
+              <a-cylinder
+                position="0 -0.4 0"
+                radius="0.01"
+                height="0.8"
+                color="#ffffff"
+              ></a-cylinder>
+            </a-entity>
+            <a-entity position="-0.6 0 0">
+              <a-cylinder
+                position="0 -0.4 0"
+                radius="0.01"
+                height="0.8"
+                color="#ffffff"
+              ></a-cylinder>
+            </a-entity>
+            <a-entity position="0 0 0.6">
+              <a-cylinder
+                position="0 -0.4 0"
+                radius="0.01"
+                height="0.8"
+                color="#ffffff"
+              ></a-cylinder>
+            </a-entity>
+            <a-entity position="0 0 -0.6">
+              <a-cylinder
+                position="0 -0.4 0"
+                radius="0.01"
+                height="0.8"
+                color="#ffffff"
+              ></a-cylinder>
+            </a-entity>
+          </a-entity>
           <a-light
             type="point"
             color="#ffaa00"
-            intensity="2"
-            position="0 0.5 0"
+            position="0 0 0"
+            animation="property: light.intensity; from: 1; to: 3; dir: alternate; loop: true; dur: 1200; easing: easeInOutSine"
           ></a-light>
+
+          <a-entity
+            animation="property: rotation; to: 0 -360 0; loop: true; dur: 6000; easing: linear;"
+          >
+            <a-sphere
+              position="1.1 0 0"
+              radius="0.04"
+              color="#ffffcc"
+              material="emissive: #ffcc00; emissiveIntensity: 1"
+            ></a-sphere>
+            <a-sphere
+              position="-1.1 0 0"
+              radius="0.04"
+              color="#ffffcc"
+              material="emissive: #ffcc00; emissiveIntensity: 1"
+            ></a-sphere>
+            <a-sphere
+              position="0 0 1.1"
+              radius="0.04"
+              color="#ffffcc"
+              material="emissive: #ffcc00; emissiveIntensity: 1"
+            ></a-sphere>
+            <a-sphere
+              position="0 0 -1.1"
+              radius="0.04"
+              color="#ffffcc"
+              material="emissive: #ffcc00; emissiveIntensity: 1"
+            ></a-sphere>
+          </a-entity>
         </a-entity>
       </a-marker>
 
-      <!-- CAMERA -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
