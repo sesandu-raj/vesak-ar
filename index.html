@@ -2,9 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>WebXR Giant Vesak Lantern</title>
+    <title>GPS Location-Based Vesak Lantern</title>
 
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
     <style>
       body {
@@ -12,7 +14,6 @@
         overflow: hidden;
         font-family: Arial, sans-serif;
       }
-
       #ui {
         position: fixed;
         top: 20px;
@@ -23,38 +24,40 @@
         padding: 15px 20px;
         border-radius: 12px;
         border: 1px solid #ffaa00;
-        box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);
-        transition: opacity 0.5s;
       }
-
       #ui h1 {
         margin: 0;
         color: #ffcc00;
         font-size: 20px;
-        letter-spacing: 1px;
       }
-
       #ui p {
         margin: 8px 0 0;
         font-size: 14px;
         color: #eeeeee;
+      }
+      .a-enter-vr-button {
+        display: none !important;
       }
     </style>
   </head>
 
   <body>
     <div id="ui">
-      <h1>🪔 WebXR Atapattama</h1>
-      <p>Click the <b>"AR"</b> button in the bottom right.</p>
-      <p style="color: #ffaa00; font-size: 12px">
-        Look around! It will spawn 4 meters in front of you.
-      </p>
+      <h1>🪔 GPS Atapattama</h1>
+      <p>Look around! Placed at specific coordinates.</p>
     </div>
 
     <a-scene
-      webxr="referenceSpaceType: local-floor; requiredFeatures: local-floor"
+      vr-mode-ui="enabled: false"
+      arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;"
     >
-      <a-entity position="0 3 -4" scale="2.05 2.05 2.05">
+      <a-camera gps-camera rotation-reader></a-camera>
+
+      <a-entity
+        gps-entity-place="latitude: 6.984767296305048; longitude: 81.07032999769135g;"
+        scale="2.05 2.05 2.05"
+        position="0 2 0"
+      >
         <a-entity
           animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear;"
         >
@@ -63,13 +66,11 @@
             wireframe="true"
             color="#d4af37"
           ></a-octahedron>
-
           <a-octahedron
             radius="0.6"
             color="#ffeb99"
             material="opacity: 0.85; transparent: true; emissive: #ff6600; emissiveIntensity: 0.6"
           ></a-octahedron>
-
           <a-cylinder
             position="0 0.6 0"
             radius="0.1"
@@ -140,7 +141,6 @@
           intensity="2"
           animation="property: light.intensity; from: 2; to: 5; dir: alternate; loop: true; dur: 1200; easing: easeInOutSine"
         ></a-light>
-
         <a-light type="ambient" color="#444"></a-light>
 
         <a-entity
@@ -173,20 +173,5 @@
         </a-entity>
       </a-entity>
     </a-scene>
-
-    <script>
-      const sceneEl = document.querySelector("a-scene");
-      const uiEl = document.getElementById("ui");
-
-      sceneEl.addEventListener("enter-vr", function () {
-        // Hides the overlay so you get a clean camera view
-        uiEl.style.display = "none";
-      });
-
-      sceneEl.addEventListener("exit-vr", function () {
-        // Brings the overlay back if you exit AR
-        uiEl.style.display = "block";
-      });
-    </script>
   </body>
 </html>
