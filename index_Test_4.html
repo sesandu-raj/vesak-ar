@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Markerless World AR Vesak Lantern</title>
+
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 12px;
+        border: 1px solid #ffaa00;
+        box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);
+      }
+
+      .overlay h1 {
+        margin: 0;
+        color: #ffcc00;
+        font-size: 20px;
+      }
+
+      .overlay p {
+        margin: 8px 0 0;
+        font-size: 14px;
+        color: #eeeeee;
+        max-width: 250px;
+        line-height: 1.4;
+      }
+
+      .warning {
+        color: #ff5555;
+        font-size: 12px;
+        margin-top: 10px !important;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="overlay">
+      <h1>🪔 World-Anchored AR</h1>
+      <p>
+        Tap the <strong>"AR" button</strong> in the bottom right corner to place
+        the lantern.
+      </p>
+      <p class="warning">
+        It will appear 8 meters in front of you. Walk around freely!
+      </p>
+    </div>
+
+    <a-scene>
+      <a-entity position="0 3 -8" scale="3.33 3.33 3.33">
+        <a-entity
+          animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear;"
+        >
+          <a-octahedron
+            radius="0.62"
+            wireframe="true"
+            color="#d4af37"
+          ></a-octahedron>
+
+          <a-octahedron
+            radius="0.6"
+            color="#ffeb99"
+            material="opacity: 0.85; transparent: true; emissive: #ff6600; emissiveIntensity: 0.6"
+          ></a-octahedron>
+
+          <a-cylinder
+            position="0 0.6 0"
+            radius="0.1"
+            height="0.05"
+            color="#cc0000"
+          ></a-cylinder>
+
+          <a-entity position="0 -0.6 0">
+            <a-cylinder
+              position="0 0 0"
+              radius="0.1"
+              height="0.05"
+              color="#cc0000"
+            ></a-cylinder>
+            <a-cylinder
+              position="0 -0.3 0"
+              radius="0.015"
+              height="0.6"
+              color="#ffffff"
+            ></a-cylinder>
+            <a-cone
+              position="0 -0.6 0"
+              radius-bottom="0.05"
+              radius-top="0.015"
+              height="0.15"
+              color="#cc0000"
+            ></a-cone>
+          </a-entity>
+
+          <a-entity position="0.6 0 0">
+            <a-cylinder
+              position="0 -0.4 0"
+              radius="0.01"
+              height="0.8"
+              color="#ffffff"
+            ></a-cylinder>
+          </a-entity>
+          <a-entity position="-0.6 0 0">
+            <a-cylinder
+              position="0 -0.4 0"
+              radius="0.01"
+              height="0.8"
+              color="#ffffff"
+            ></a-cylinder>
+          </a-entity>
+          <a-entity position="0 0 0.6">
+            <a-cylinder
+              position="0 -0.4 0"
+              radius="0.01"
+              height="0.8"
+              color="#ffffff"
+            ></a-cylinder>
+          </a-entity>
+          <a-entity position="0 0 -0.6">
+            <a-cylinder
+              position="0 -0.4 0"
+              radius="0.01"
+              height="0.8"
+              color="#ffffff"
+            ></a-cylinder>
+          </a-entity>
+        </a-entity>
+        <a-light
+          type="point"
+          color="#ffaa00"
+          position="0 0 0"
+          intensity="2"
+          animation="property: light.intensity; from: 2; to: 5; dir: alternate; loop: true; dur: 1200; easing: easeInOutSine"
+        ></a-light>
+
+        <a-entity
+          animation="property: rotation; to: 0 -360 0; loop: true; dur: 6000; easing: linear;"
+        >
+          <a-sphere
+            position="1.1 0 0"
+            radius="0.04"
+            color="#ffffcc"
+            material="emissive: #ffcc00; emissiveIntensity: 1"
+          ></a-sphere>
+          <a-sphere
+            position="-1.1 0 0"
+            radius="0.04"
+            color="#ffffcc"
+            material="emissive: #ffcc00; emissiveIntensity: 1"
+          ></a-sphere>
+          <a-sphere
+            position="0 0 1.1"
+            radius="0.04"
+            color="#ffffcc"
+            material="emissive: #ffcc00; emissiveIntensity: 1"
+          ></a-sphere>
+          <a-sphere
+            position="0 0 -1.1"
+            radius="0.04"
+            color="#ffffcc"
+            material="emissive: #ffcc00; emissiveIntensity: 1"
+          ></a-sphere>
+        </a-entity>
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
