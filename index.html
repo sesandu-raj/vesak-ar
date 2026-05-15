@@ -6,74 +6,30 @@
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
     <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-        font-family: Arial, sans-serif;
-      }
-
+      body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
+      
       #ui {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 10;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 12px;
-        border: 1px solid #ffaa00;
-        box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);
+        position: fixed; top: 20px; left: 20px; z-index: 10;
+        background: rgba(0, 0, 0, 0.7); color: white;
+        padding: 15px 20px; border-radius: 12px;
+        border: 1px solid #ffaa00; box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);
       }
+      
+      #ui h1 { margin: 0; color: #ffcc00; font-size: 20px; }
+      #ui p { margin: 8px 0 0; font-size: 14px; color: #eeeeee; }
 
-      #ui h1 {
-        margin: 0;
-        color: #ffcc00;
-        font-size: 20px;
-      }
-      #ui p {
-        margin: 8px 0 0;
-        font-size: 14px;
-        color: #eeeeee;
-      }
-
-      .a-enter-vr-button {
-        display: none !important;
-      }
-      .a-enter-ar-button {
-        display: block !important;
-      }
+      .a-enter-vr-button { display: none !important; }
+      .a-enter-ar-button { display: block !important; }
     </style>
 
     <script>
-      // FIXED Tap-to-Place Logic
-      AFRAME.registerComponent("tap-to-place", {
+      // A tiny script just to change the text instructions when you place the lantern
+      AFRAME.registerComponent('ar-ui', {
         init: function () {
-          const reticle = this.el;
-          const lantern = document.getElementById("lantern");
-          const scene = this.el.sceneEl;
-
-          // Listen for a screen tap (WebXR 'select' event)
-          scene.addEventListener("select", () => {
-            // Only place the lantern IF the orange ring is currently visible on the floor
-            if (reticle.getAttribute("visible")) {
-              // 1. Copy the exact floor coordinates from the ring to the lantern
-              lantern.setAttribute(
-                "position",
-                reticle.getAttribute("position"),
-              );
-
-              // 2. Make the lantern visible!
-              lantern.setAttribute("visible", "true");
-
-              // 3. Hide the aiming ring so you don't place it again
-              reticle.setAttribute("visible", "false");
-
-              // 4. Update the text box
-              document.getElementById("instruction").innerHTML =
-                "Lantern placed! Walk around it.";
-            }
+          this.el.addEventListener('ar-hit-test-select', function () {
+            document.getElementById('instruction').innerHTML = "Lantern placed! Walk around it.";
           });
-        },
+        }
       });
     </script>
   </head>
@@ -81,140 +37,45 @@
   <body>
     <div id="ui">
       <h1>🪔 AR Atapattama</h1>
-      <p id="instruction">
-        1. Point at the floor and move phone slowly.<br />2. Wait for the orange
-        ring.<br />3. <b>TAP</b> the ring to place.
-      </p>
+      <p id="instruction">Point phone at floor, move slowly, then <b>TAP</b> the square.</p>
     </div>
 
-    <a-scene
-      webxr="referenceSpaceType: local-floor; requiredFeatures: hit-test, local-floor"
-    >
-      <a-entity
-        id="reticle"
-        ar-hit-test
-        tap-to-place
-        geometry="primitive: ring; radiusInner: 0.15; radiusOuter: 0.2"
-        material="color: #ffaa00; shader: flat"
-        rotation="-90 0 0"
-      >
-      </a-entity>
-
+    <a-scene 
+      webxr="requiredFeatures: hit-test, local-floor" 
+      ar-hit-test="target: #lantern; type: map;"
+      ar-ui>
+      
       <a-entity id="lantern" visible="false" scale="2.05 2.05 2.05">
+          
         <a-entity position="0 1.5 0">
-          <a-entity
-            animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear;"
-          >
-            <a-octahedron
-              radius="0.62"
-              wireframe="true"
-              color="#d4af37"
-            ></a-octahedron>
-            <a-octahedron
-              radius="0.6"
-              color="#ffeb99"
-              material="opacity: 0.85; transparent: true; emissive: #ff6600; emissiveIntensity: 0.6"
-            ></a-octahedron>
-            <a-cylinder
-              position="0 0.6 0"
-              radius="0.1"
-              height="0.05"
-              color="#cc0000"
-            ></a-cylinder>
+            
+          <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear;">
+            <a-octahedron radius="0.62" wireframe="true" color="#d4af37"></a-octahedron>
+            <a-octahedron radius="0.6" color="#ffeb99" material="opacity: 0.85; transparent: true; emissive: #ff6600; emissiveIntensity: 0.6"></a-octahedron>
+            <a-cylinder position="0 0.6 0" radius="0.1" height="0.05" color="#cc0000"></a-cylinder>
 
             <a-entity position="0 -0.6 0">
-              <a-cylinder
-                position="0 0 0"
-                radius="0.1"
-                height="0.05"
-                color="#cc0000"
-              ></a-cylinder>
-              <a-cylinder
-                position="0 -0.3 0"
-                radius="0.015"
-                height="0.6"
-                color="#ffffff"
-              ></a-cylinder>
-              <a-cone
-                position="0 -0.6 0"
-                radius-bottom="0.05"
-                radius-top="0.015"
-                height="0.15"
-                color="#cc0000"
-              ></a-cone>
+              <a-cylinder position="0 0 0" radius="0.1" height="0.05" color="#cc0000"></a-cylinder>
+              <a-cylinder position="0 -0.3 0" radius="0.015" height="0.6" color="#ffffff"></a-cylinder>
+              <a-cone position="0 -0.6 0" radius-bottom="0.05" radius-top="0.015" height="0.15" color="#cc0000"></a-cone>
             </a-entity>
 
-            <a-entity position="0.6 0 0"
-              ><a-cylinder
-                position="0 -0.4 0"
-                radius="0.01"
-                height="0.8"
-                color="#ffffff"
-              ></a-cylinder
-            ></a-entity>
-            <a-entity position="-0.6 0 0"
-              ><a-cylinder
-                position="0 -0.4 0"
-                radius="0.01"
-                height="0.8"
-                color="#ffffff"
-              ></a-cylinder
-            ></a-entity>
-            <a-entity position="0 0 0.6"
-              ><a-cylinder
-                position="0 -0.4 0"
-                radius="0.01"
-                height="0.8"
-                color="#ffffff"
-              ></a-cylinder
-            ></a-entity>
-            <a-entity position="0 0 -0.6"
-              ><a-cylinder
-                position="0 -0.4 0"
-                radius="0.01"
-                height="0.8"
-                color="#ffffff"
-              ></a-cylinder
-            ></a-entity>
+            <a-entity position="0.6 0 0"><a-cylinder position="0 -0.4 0" radius="0.01" height="0.8" color="#ffffff"></a-cylinder></a-entity>
+            <a-entity position="-0.6 0 0"><a-cylinder position="0 -0.4 0" radius="0.01" height="0.8" color="#ffffff"></a-cylinder></a-entity>
+            <a-entity position="0 0 0.6"><a-cylinder position="0 -0.4 0" radius="0.01" height="0.8" color="#ffffff"></a-cylinder></a-entity>
+            <a-entity position="0 0 -0.6"><a-cylinder position="0 -0.4 0" radius="0.01" height="0.8" color="#ffffff"></a-cylinder></a-entity>
           </a-entity>
 
-          <a-light
-            type="point"
-            color="#ffaa00"
-            position="0 0 0"
-            intensity="2"
-            animation="property: light.intensity; from: 2; to: 5; dir: alternate; loop: true; dur: 1200; easing: easeInOutSine"
-          ></a-light>
+          <a-light type="point" color="#ffaa00" position="0 0 0" intensity="2" animation="property: light.intensity; from: 2; to: 5; dir: alternate; loop: true; dur: 1200; easing: easeInOutSine"></a-light>
           <a-light type="ambient" color="#444"></a-light>
 
-          <a-entity
-            animation="property: rotation; to: 0 -360 0; loop: true; dur: 6000; easing: linear;"
-          >
-            <a-sphere
-              position="1.1 0 0"
-              radius="0.04"
-              color="#ffffcc"
-              material="emissive: #ffcc00; emissiveIntensity: 1"
-            ></a-sphere>
-            <a-sphere
-              position="-1.1 0 0"
-              radius="0.04"
-              color="#ffffcc"
-              material="emissive: #ffcc00; emissiveIntensity: 1"
-            ></a-sphere>
-            <a-sphere
-              position="0 0 1.1"
-              radius="0.04"
-              color="#ffffcc"
-              material="emissive: #ffcc00; emissiveIntensity: 1"
-            ></a-sphere>
-            <a-sphere
-              position="0 0 -1.1"
-              radius="0.04"
-              color="#ffffcc"
-              material="emissive: #ffcc00; emissiveIntensity: 1"
-            ></a-sphere>
+          <a-entity animation="property: rotation; to: 0 -360 0; loop: true; dur: 6000; easing: linear;">
+            <a-sphere position="1.1 0 0" radius="0.04" color="#ffffcc" material="emissive: #ffcc00; emissiveIntensity: 1"></a-sphere>
+            <a-sphere position="-1.1 0 0" radius="0.04" color="#ffffcc" material="emissive: #ffcc00; emissiveIntensity: 1"></a-sphere>
+            <a-sphere position="0 0 1.1" radius="0.04" color="#ffffcc" material="emissive: #ffcc00; emissiveIntensity: 1"></a-sphere>
+            <a-sphere position="0 0 -1.1" radius="0.04" color="#ffffcc" material="emissive: #ffcc00; emissiveIntensity: 1"></a-sphere>
           </a-entity>
+          
         </a-entity>
       </a-entity>
     </a-scene>
