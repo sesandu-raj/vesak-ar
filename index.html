@@ -1,79 +1,365 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Instant Spawn Vesak Lantern</title>
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    
+    <title>WebXR Giant Vesak Lantern</title>
+
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
     <style>
-      body { margin: 0; overflow: hidden; font-family: sans-serif; }
-      #ui {
-        position: fixed; top: 20px; left: 20px; z-index: 10;
-        background: rgba(0, 0, 0, 0.7); color: #00ffcc;
-        padding: 15px; border-radius: 10px; border: 1px solid #00ffcc;
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
       }
-      .a-enter-vr-button { display: none; }
+
+      #ui {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 12px;
+        border: 1px solid #ffaa00;
+        box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);
+        transition: opacity 0.5s;
+      }
+
+      #ui h1 {
+        margin: 0;
+        color: #ffcc00;
+        font-size: 20px;
+        letter-spacing: 1px;
+      }
+
+      #ui p {
+        margin: 8px 0 0;
+        font-size: 14px;
+        color: #eeeeee;
+      }
     </style>
   </head>
 
   <body>
     <div id="ui">
-      <b>🪔 4m Traditional Atapattama</b><br>
-      Look straight ahead. It is 4m away!
+      <h1>🪔 WebXR Atapattama</h1>
+      <p>Click the <b>"AR"</b> button in the bottom right.</p>
+      <p style="color: #ffaa00; font-size: 12px">
+        Look around! It will spawn 4 meters in front of you.
+      </p>
     </div>
 
-    <a-scene webxr="optionalFeatures: local-floor;">
-      
-      <a-entity id="lantern-anchor" position="0 0 -4" scale="1.5 1.5 1.5">
-          
-        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear;">
-          
-          <a-entity position="0 2.5 0">
-            <a-octahedron radius="1" material="color: #004d00; emissive: #00ff00; emissiveIntensity: 1; opacity: 0.9; transparent: true"></a-octahedron>
-            <a-entity rotation="0 0 0">
-                <a-cylinder position="0 0.5 0.8" rotation="45 0 0" height="0.6" radius="0.02" color="#daa520"></a-cylinder>
-                <a-sphere position="0 0.8 1.1" radius="0.06" color="#00ffff" material="emissive: #00ffff"></a-sphere>
+    <a-scene
+      webxr="requiredFeatures: hit-test, local-floor"
+      ar-hit-test="target: #lantern; type: map;"
+      ar-instructions
+      renderer="colorManagement: true;"
+    >
+      <a-assets> </a-assets>
+
+      <a-entity id="lantern" visible="false" position="0 2 0" scale="1 1 1">
+        <a-entity
+          animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear;"
+          position="0 -2 0"
+        >
+          <a-entity id="primitive-design" scale="1.3 1.3 1.3">
+            <a-octahedron
+              position="0 -1.5 0"
+              radius="0.8"
+              simulate-pattern
+              material="color: darkgreen; emissive: #00ff00; emissiveIntensity: 2; transparent: true; opacity: 0.95"
+            ></a-octahedron>
+            <a-torus
+              position="0 -1.5 0"
+              radius="0.75"
+              radius-tubular="0.01"
+              rotation="90 0 0"
+              material="color: #ffcc00; emissive: #ffaa00; emissiveIntensity: 1;"
+            ></a-torus>
+            <a-torus
+              position="0 -1.5 0"
+              radius="0.75"
+              radius-tubular="0.01"
+              rotation="0 0 0"
+              material="color: #ffcc00; emissive: #ffaa00; emissiveIntensity: 1;"
+            ></a-torus>
+
+            <a-cylinder
+              position="0 -0.5 0"
+              height="1"
+              radius-bottom="0.8"
+              radius-top="0.4"
+              simulate-pattern
+              material="color: darkgreen; emissive: #00ff00; emissiveIntensity: 3"
+            ></a-cylinder>
+
+            <a-entity position="0 -0.2 0">
+              <a-cylinder
+                height="2.2"
+                radius="0.02"
+                color="#daa520"
+                rotation="0 0 90"
+              ></a-cylinder>
+              <a-cylinder
+                height="2.2"
+                radius="0.02"
+                color="#daa520"
+                rotation="90 0 90"
+              ></a-cylinder>
+            </a-entity>
+
+            <a-cylinder
+              position="0 0.5 0"
+              height="1.1"
+              radius-bottom="0.4"
+              radius-top="1.1"
+              simulate-pattern
+              material="color: darkgreen; emissive: #00ff00; emissiveIntensity: 3"
+            ></a-cylinder>
+
+            <a-octahedron
+              position="0 1.5 0"
+              radius="1.3"
+              simulate-pattern
+              material="color: darkgreen; emissive: #00ff00; emissiveIntensity: 3; transparent: true; opacity: 0.9"
+            ></a-octahedron>
+
+            <a-entity position="0 2.2 0">
+              <a-entity rotation="0 0 0">
+                <a-cylinder
+                  height="0.8"
+                  radius="0.02"
+                  color="#daa520"
+                  position="0 -0.4 1.2"
+                  rotation="-40 0 0"
+                ></a-cylinder>
+                <a-sphere
+                  radius="0.05"
+                  position="0 0.05 1.45"
+                  color="#00ffcc"
+                  material="emissive: #00ffcc; emissiveIntensity: 1"
+                ></a-sphere>
+              </a-entity>
+              <a-entity rotation="0 90 0">
+                <a-cylinder
+                  height="0.8"
+                  radius="0.02"
+                  color="#daa520"
+                  position="0 -0.4 1.2"
+                  rotation="-40 0 0"
+                ></a-cylinder>
+                <a-sphere
+                  radius="0.05"
+                  position="0 0.05 1.45"
+                  color="#00ffcc"
+                  material="emissive: #00ffcc; emissiveIntensity: 1"
+                ></a-sphere>
+              </a-entity>
+              <a-entity rotation="0 180 0">
+                <a-cylinder
+                  height="0.8"
+                  radius="0.02"
+                  color="#daa520"
+                  position="0 -0.4 1.2"
+                  rotation="-40 0 0"
+                ></a-cylinder>
+                <a-sphere
+                  radius="0.05"
+                  position="0 0.05 1.45"
+                  color="#00ffcc"
+                  material="emissive: #00ffcc; emissiveIntensity: 1"
+                ></a-sphere>
+              </a-entity>
+              <a-entity rotation="0 -90 0">
+                <a-cylinder
+                  height="0.8"
+                  radius="0.02"
+                  color="#daa520"
+                  position="0 -0.4 1.2"
+                  rotation="-40 0 0"
+                ></a-cylinder>
+                <a-sphere
+                  radius="0.05"
+                  position="0 0.05 1.45"
+                  color="#00ffcc"
+                  material="emissive: #00ffcc; emissiveIntensity: 1"
+                ></a-sphere>
+              </a-entity>
+            </a-entity>
+
+            <a-entity id="mini-lanterns-group">
+              <a-entity position="0 -0.2 1.1">
+                <a-sphere
+                  position="0 0.25 0"
+                  radius="0.08"
+                  color="#0000ff"
+                  material="emissive: cyan; emissiveIntensity: 1;"
+                ></a-sphere>
+                <a-box
+                  height="0.6"
+                  width="0.4"
+                  depth="0.4"
+                  simulate-pattern
+                  material="color: darkblue; emissive: cyan; emissiveIntensity: 3"
+                ></a-box>
+                <a-cylinder
+                  position="0 -0.3 0"
+                  height="0.4"
+                  radius="0.18"
+                  open-ended="true"
+                  radial-segments="200"
+                  material="opacity: 0.8; transparent: true; color: blue; emissive: cyan; emissiveIntensity: 1;"
+                ></a-cylinder>
+                <a-sphere
+                  position="0 -0.7 0"
+                  radius="0.08"
+                  color="#0000ff"
+                  material="emissive: cyan; emissiveIntensity: 1;"
+                ></a-sphere>
+              </a-entity>
+
+              <a-entity position="1.1 -0.2 0" rotation="0 90 0">
+                <a-sphere
+                  position="0 0.25 0"
+                  radius="0.08"
+                  color="#0000ff"
+                  material="emissive: cyan; emissiveIntensity: 1;"
+                ></a-sphere>
+                <a-box
+                  height="0.6"
+                  width="0.4"
+                  depth="0.4"
+                  simulate-pattern
+                  material="color: darkblue; emissive: cyan; emissiveIntensity: 3"
+                ></a-box>
+                <a-cylinder
+                  position="0 -0.3 0"
+                  height="0.4"
+                  radius="0.18"
+                  open-ended="true"
+                  radial-segments="200"
+                  material="opacity: 0.8; transparent: true; color: blue; emissive: cyan; emissiveIntensity: 1;"
+                ></a-cylinder>
+                <a-sphere
+                  position="0 -0.7 0"
+                  radius="0.08"
+                  color="#0000ff"
+                  material="emissive: cyan; emissiveIntensity: 1;"
+                ></a-sphere>
+              </a-entity>
+
+              <a-entity position="0 -0.2 -1.1" rotation="0 180 0">
+                <a-sphere
+                  position="0 0.25 0"
+                  radius="0.08"
+                  color="#0000ff"
+                  material="emissive: cyan; emissiveIntensity: 1;"
+                ></a-sphere>
+                <a-box
+                  height="0.6"
+                  width="0.4"
+                  depth="0.4"
+                  simulate-pattern
+                  material="color: darkblue; emissive: cyan; emissiveIntensity: 3"
+                ></a-box>
+                <a-cylinder
+                  position="0 -0.3 0"
+                  height="0.4"
+                  radius="0.18"
+                  open-ended="true"
+                  radial-segments="200"
+                  material="opacity: 0.8; transparent: true; color: blue; emissive: cyan; emissiveIntensity: 1;"
+                ></a-cylinder>
+                <a-sphere
+                  position="0 -0.7 0"
+                  radius="0.08"
+                  color="#0000ff"
+                  material="emissive: cyan; emissiveIntensity: 1;"
+                ></a-sphere>
+              </a-entity>
+
+              <a-entity position="-1.1 -0.2 0" rotation="0 -90 0">
+                <a-sphere
+                  position="0 0.25 0"
+                  radius="0.08"
+                  color="#0000ff"
+                  material="emissive: cyan; emissiveIntensity: 1;"
+                ></a-sphere>
+                <a-box
+                  height="0.6"
+                  width="0.4"
+                  depth="0.4"
+                  simulate-pattern
+                  material="color: darkblue; emissive: cyan; emissiveIntensity: 3"
+                ></a-box>
+                <a-cylinder
+                  position="0 -0.3 0"
+                  height="0.4"
+                  radius="0.18"
+                  open-ended="true"
+                  radial-segments="200"
+                  material="opacity: 0.8; transparent: true; color: blue; emissive: cyan; emissiveIntensity: 1;"
+                ></a-cylinder>
+                <a-sphere
+                  position="0 -0.7 0"
+                  radius="0.08"
+                  color="#0000ff"
+                  material="emissive: cyan; emissiveIntensity: 1;"
+                ></a-sphere>
+              </a-entity>
+            </a-entity>
+
+            <a-entity position="0 -2.4 0">
+              <a-cylinder
+                height="0.1"
+                radius="1.3"
+                radial-segments="8"
+                material="color: #666; emissive: #ffffff; emissiveIntensity: 1;"
+              ></a-cylinder>
+              <a-torus
+                radius="1.1"
+                radius-tubular="0.005"
+                color="#daa520"
+                rotation="90 0 0"
+                material="emissive: #ffaa00; emissiveIntensity: 0.5"
+              ></a-torus>
+              <a-cylinder
+                position="0 -0.2 0"
+                height="0.5"
+                radius="1.31"
+                open-ended="true"
+                radial-segments="300"
+                material="opacity: 0.8; transparent: true; color: blue; emissive: cyan; emissiveIntensity: 1;"
+              ></a-cylinder>
             </a-entity>
           </a-entity>
+        </a-entity>
 
-          <a-cylinder position="0 1.2 0" height="1.5" radius-bottom="0.4" radius-top="1" segments-radial="8" material="color: #002200; emissive: #00ff00; emissiveIntensity: 0.5"></a-cylinder>
-
-          <a-entity id="side-lanterns">
-            <a-entity position="0 1.2 1.2">
-              <a-box width="0.4" height="0.6" depth="0.4" material="color: #000066; emissive: #0099ff; emissiveIntensity: 1"></a-box>
-              <a-cylinder position="0 -0.4 0" height="0.4" radius="0.2" open-ended="true" color="blue" material="opacity: 0.6; transparent: true"></a-cylinder>
-            </a-entity>
-            <a-entity position="1.2 1.2 0" rotation="0 90 0">
-              <a-box width="0.4" height="0.6" depth="0.4" material="color: #000066; emissive: #0099ff; emissiveIntensity: 1"></a-box>
-              <a-cylinder position="0 -0.4 0" height="0.4" radius="0.2" open-ended="true" color="blue" material="opacity: 0.6; transparent: true"></a-cylinder>
-            </a-entity>
-            <a-entity position="0 1.2 -1.2" rotation="0 180 0">
-              <a-box width="0.4" height="0.6" depth="0.4" material="color: #000066; emissive: #0099ff; emissiveIntensity: 1"></a-box>
-              <a-cylinder position="0 -0.4 0" height="0.4" radius="0.2" open-ended="true" color="blue" material="opacity: 0.6; transparent: true"></a-cylinder>
-            </a-entity>
-            <a-entity position="-1.2 1.2 0" rotation="0 270 0">
-              <a-box width="0.4" height="0.6" depth="0.4" material="color: #000066; emissive: #0099ff; emissiveIntensity: 1"></a-box>
-              <a-cylinder position="0 -0.4 0" height="0.4" radius="0.2" open-ended="true" color="blue" material="opacity: 0.6; transparent: true"></a-cylinder>
-            </a-entity>
-          </a-entity>
-
-          <a-entity position="0 0 0">
-            <a-octahedron radius="0.8" material="color: #1a0033; emissive: #9900ff; emissiveIntensity: 0.6"></a-octahedron>
-            <a-sphere position="0.6 -0.6 0.6" radius="0.08" color="#00ffff"></a-sphere>
-            <a-sphere position="-0.6 -0.6 -0.6" radius="0.08" color="#00ffff"></a-sphere>
-          </a-entity>
-
-          <a-entity position="0 -0.8 0">
-            <a-cylinder segments-radial="8" height="0.1" radius="1.2" color="#333"></a-cylinder>
-            <a-cylinder position="0 -0.3 0" height="0.6" radius="1.21" open-ended="true" material="color: blue; opacity: 0.5; transparent: true"></a-cylinder>
-          </a-entity>
-
-        </a-entity> <a-light type="point" intensity="2" color="#00ffcc" position="0 1.5 0"></a-light>
+        <a-light
+          type="point"
+          color="#00ffcc"
+          position="0 1 0"
+          intensity="1"
+        ></a-light>
+        <a-light type="ambient" color="#333"></a-light>
       </a-entity>
-
-      <a-light type="ambient" intensity="0.5" color="#fff"></a-light>
-      
-      <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
+
+    <script>
+      const sceneEl = document.querySelector("a-scene");
+      const uiEl = document.getElementById("ui");
+
+      sceneEl.addEventListener("enter-vr", function () {
+        // Hides the overlay so you get a clean camera view
+        uiEl.style.display = "none";
+      });
+
+      sceneEl.addEventListener("exit-vr", function () {
+        // Brings the overlay back if you exit AR
+        uiEl.style.display = "block";
+      });
+    </script>
   </body>
 </html>
