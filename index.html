@@ -1,0 +1,1232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>Vesak Lantern AR — Grand Edition</title>
+
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        overflow: hidden;
+        background: #000;
+      }
+
+      /* ── Splash Screen ── */
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: radial-gradient(
+          ellipse at 50% 30%,
+          #2a0800 0%,
+          #0f0200 50%,
+          #000 100%
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        transition: opacity 1.2s ease;
+      }
+      #splash.fade {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* Animated lantern on splash */
+      .splash-lantern-wrap {
+        position: relative;
+        width: 120px;
+        height: 180px;
+        margin-bottom: 32px;
+      }
+      .sl-chain {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        height: 28px;
+        background: linear-gradient(to bottom, #c8a000, #ffd700, #c8a000);
+        border-radius: 2px;
+      }
+      .sl-top-jewel {
+        position: absolute;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 22px;
+        height: 14px;
+        background: radial-gradient(ellipse, #fff8cc, #ffd700, #b8860b);
+        border-radius: 50%;
+        box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.6);
+      }
+      .sl-top-cap {
+        position: absolute;
+        top: 34px;
+        left: 15px;
+        right: 15px;
+        height: 18px;
+        background: linear-gradient(to bottom, #ffd700, #b8860b);
+        border-radius: 6px 6px 0 0;
+        box-shadow: 0 -4px 12px rgba(255, 215, 0, 0.3);
+      }
+      .sl-crown {
+        position: absolute;
+        top: 32px;
+        left: 10px;
+        right: 10px;
+        height: 8px;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+      }
+      .sl-crown span {
+        width: 6px;
+        height: 6px;
+        background: radial-gradient(circle, #fff8cc, #ffd700);
+        border-radius: 50%;
+        box-shadow: 0 0 6px 2px rgba(255, 215, 0, 0.8);
+      }
+      .sl-body {
+        position: absolute;
+        top: 52px;
+        left: 8px;
+        right: 8px;
+        bottom: 30px;
+        background: radial-gradient(
+          ellipse at 50% 30%,
+          #ffee55 0%,
+          #ff6600 45%,
+          #cc1100 80%,
+          #880000 100%
+        );
+        border-radius: 30% 30% 40% 40%;
+        box-shadow:
+          0 0 30px 10px rgba(255, 140, 0, 0.8),
+          0 0 60px 25px rgba(255, 80, 0, 0.4),
+          0 0 100px 40px rgba(200, 30, 0, 0.2);
+        animation: body-breathe 1.6s ease-in-out infinite alternate;
+      }
+      /* Lattice pattern overlay */
+      .sl-body::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 6px,
+            rgba(255, 215, 0, 0.08) 6px,
+            rgba(255, 215, 0, 0.08) 7px
+          ),
+          repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 6px,
+            rgba(255, 215, 0, 0.08) 6px,
+            rgba(255, 215, 0, 0.08) 7px
+          );
+        border-radius: inherit;
+      }
+      .sl-mid-band {
+        position: absolute;
+        left: 4px;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 8px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 215, 0, 0.6),
+          transparent
+        );
+      }
+      .sl-bot-cap {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        height: 16px;
+        background: linear-gradient(to bottom, #b8860b, #ffd700, #b8860b);
+        border-radius: 0 0 6px 6px;
+      }
+      .sl-tassels {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+      }
+      .sl-tassels span {
+        width: 2px;
+        height: 22px;
+        background: linear-gradient(to bottom, #ffd700, rgba(255, 150, 0, 0));
+        border-radius: 1px;
+      }
+      @keyframes body-breathe {
+        from {
+          box-shadow:
+            0 0 30px 10px rgba(255, 140, 0, 0.8),
+            0 0 60px 25px rgba(255, 80, 0, 0.4);
+        }
+        to {
+          box-shadow:
+            0 0 50px 18px rgba(255, 180, 0, 1),
+            0 0 90px 40px rgba(255, 100, 0, 0.6);
+        }
+      }
+      .splash-lantern-wrap {
+        animation: sway 3s ease-in-out infinite;
+        transform-origin: top center;
+      }
+      @keyframes sway {
+        0%,
+        100% {
+          transform: rotate(-5deg);
+        }
+        50% {
+          transform: rotate(5deg);
+        }
+      }
+
+      #splash h1 {
+        font-family: "Cinzel Decorative", serif;
+        color: #ffd700;
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-shadow:
+          0 0 20px rgba(255, 215, 0, 0.7),
+          0 0 40px rgba(255, 140, 0, 0.4);
+        margin-bottom: 6px;
+        text-align: center;
+      }
+      #splash .sub {
+        font-family: "Cinzel", serif;
+        color: rgba(255, 200, 80, 0.5);
+        font-size: 0.68rem;
+        letter-spacing: 0.3em;
+        margin-bottom: 28px;
+        text-align: center;
+      }
+      .ornament {
+        color: rgba(255, 215, 0, 0.3);
+        font-size: 0.9rem;
+        letter-spacing: 0.4em;
+        margin-bottom: 20px;
+      }
+
+      .prog-wrap {
+        width: 200px;
+        height: 1px;
+        background: rgba(255, 215, 0, 0.15);
+        position: relative;
+      }
+      .prog-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          transparent,
+          #ffd700,
+          transparent
+        );
+        animation: prog 3.5s ease-in-out forwards;
+      }
+      @keyframes prog {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+      .prog-dot {
+        position: absolute;
+        top: -3px;
+        width: 7px;
+        height: 7px;
+        background: #ffd700;
+        border-radius: 50%;
+        box-shadow: 0 0 8px 3px rgba(255, 215, 0, 0.8);
+        animation: dot-move 3.5s ease-in-out forwards;
+      }
+      @keyframes dot-move {
+        from {
+          left: 0;
+        }
+        to {
+          left: calc(100% - 7px);
+        }
+      }
+
+      /* ── HUD ── */
+      #hud {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 16px 20px;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.7) 0%,
+          transparent 100%
+        );
+        display: none;
+        pointer-events: none;
+      }
+      #hud.show {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .hud-left h2 {
+        font-family: "Cinzel Decorative", serif;
+        color: #ffd700;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-shadow: 0 0 14px rgba(255, 215, 0, 0.9);
+        letter-spacing: 0.08em;
+      }
+      .hud-left p {
+        font-family: "Cinzel", serif;
+        color: rgba(255, 200, 80, 0.5);
+        font-size: 0.55rem;
+        letter-spacing: 0.2em;
+        margin-top: 2px;
+      }
+      .hud-badge {
+        font-family: "Cinzel", serif;
+        border: 1px solid rgba(255, 215, 0, 0.4);
+        background: rgba(255, 215, 0, 0.08);
+        color: #ffd700;
+        font-size: 0.6rem;
+        letter-spacing: 0.12em;
+        padding: 5px 14px;
+        border-radius: 20px;
+        animation: badge-pulse 2.5s ease-in-out infinite;
+      }
+      @keyframes badge-pulse {
+        0%,
+        100% {
+          opacity: 0.5;
+          border-color: rgba(255, 215, 0, 0.2);
+        }
+        50% {
+          opacity: 1;
+          border-color: rgba(255, 215, 0, 0.8);
+        }
+      }
+
+      #tip {
+        position: fixed;
+        bottom: 32px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: "Cinzel", serif;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        border-radius: 30px;
+        padding: 10px 24px;
+        color: rgba(255, 220, 100, 0.9);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        white-space: nowrap;
+        z-index: 200;
+        animation: tip-fade 1s ease 7s forwards;
+      }
+      @keyframes tip-fade {
+        to {
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
+
+      a-scene {
+        width: 100vw !important;
+        height: 100vh !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Splash ── -->
+    <div id="splash">
+      <div class="splash-lantern-wrap">
+        <div class="sl-chain"></div>
+        <div class="sl-top-jewel"></div>
+        <div class="sl-crown">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="sl-top-cap"></div>
+        <div class="sl-body"><div class="sl-mid-band"></div></div>
+        <div class="sl-bot-cap"></div>
+        <div class="sl-tassels">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="ornament">✦ ✦ ✦</div>
+      <h1>Vesak Lantern AR</h1>
+      <p class="sub">GRAND EDITION · 4 METRES</p>
+      <div class="ornament" style="margin-bottom: 0; margin-top: 0">— ◈ —</div>
+      <br />
+      <div class="prog-wrap">
+        <div class="prog-fill"></div>
+        <div class="prog-dot"></div>
+      </div>
+    </div>
+
+    <!-- ── HUD ── -->
+    <div id="hud">
+      <div class="hud-left">
+        <h2>🪔 Vesak Poya AR</h2>
+        <p>GRAND LANTERN · DIGITAL EXPERIENCE</p>
+      </div>
+      <div class="hud-badge">AR LIVE</div>
+    </div>
+
+    <div id="tip">✦ Point camera at the HIRO marker ✦</div>
+
+    <!--
+  ════════════════════════════════════════════════
+  A-Frame Scene
+  Scale: 1 A-Frame unit ≈ 1 metre in AR.js
+  Lantern total height ≈ 4 metres
+  ════════════════════════════════════════════════
+-->
+    <a-scene
+      embedded
+      vr-mode-ui="enabled: false"
+      renderer="logarithmicDepthBuffer: true; antialias: true;"
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    >
+      <!-- Global scene lighting -->
+      <a-entity
+        light="type: ambient; color: #ffddaa; intensity: 0.5;"
+      ></a-entity>
+      <a-entity
+        light="type: directional; color: #fff8ee; intensity: 0.8;"
+        position="2 4 2"
+      ></a-entity>
+
+      <!-- ════════════ HIRO MARKER ════════════ -->
+      <a-marker preset="hiro">
+        <!--
+      MASTER LANTERN GROUP
+      Floats between y=1.8 and y=2.2 (centre of 4m lantern hovers ~2m above ground)
+      Slowly rotates
+    -->
+        <a-entity
+          id="lantern-root"
+          position="0 2.0 0"
+          animation="property:rotation; to:0 360 0; loop:true; dur:20000; easing:linear"
+          animation__float="property:position; from:0 1.8 0; to:0 2.2 0; loop:true; dur:3000; dir:alternate; easing:easeInOutSine"
+        >
+          <!-- ══════════════════════════════════
+           SECTION 1: CROWN / TOP FINIAL
+           y range: 1.7 → 2.0 (top of lantern)
+           ══════════════════════════════════ -->
+
+          <!-- Finial spike -->
+          <a-cone
+            color="#ffd700"
+            radius-bottom="0.04"
+            radius-top="0.005"
+            height="0.35"
+            position="0 1.95 0"
+            material="emissive:#cc9900; emissiveIntensity:0.8; metalness:0.9; roughness:0.1;"
+          >
+          </a-cone>
+
+          <!-- Finial jewel orb -->
+          <a-sphere
+            color="#fff8cc"
+            radius="0.09"
+            position="0 1.72 0"
+            material="emissive:#ffee88; emissiveIntensity:2; transparent:true; opacity:0.9;"
+            animation="property:scale; from:1 1 1; to:1.3 1.3 1.3; loop:true; dur:1200; dir:alternate; easing:easeInOutSine"
+          >
+          </a-sphere>
+
+          <!-- Crown disc - top -->
+          <a-cylinder
+            color="#ffd700"
+            radius="0.42"
+            height="0.06"
+            position="0 1.62 0"
+            material="emissive:#cc9900; emissiveIntensity:0.7; metalness:0.8; roughness:0.2;"
+          >
+          </a-cylinder>
+
+          <!-- Crown ring of pearls (8 spheres) -->
+          <a-entity position="0 1.68 0">
+            <a-sphere
+              color="#fff8dd"
+              radius="0.055"
+              position="0.38 0 0"
+              material="emissive:#ffeeaa; emissiveIntensity:1.2;"
+            ></a-sphere>
+            <a-sphere
+              color="#fff8dd"
+              radius="0.055"
+              position="0.269 0 0.269"
+              material="emissive:#ffeeaa; emissiveIntensity:1.2;"
+            ></a-sphere>
+            <a-sphere
+              color="#fff8dd"
+              radius="0.055"
+              position="0 0 0.38"
+              material="emissive:#ffeeaa; emissiveIntensity:1.2;"
+            ></a-sphere>
+            <a-sphere
+              color="#fff8dd"
+              radius="0.055"
+              position="-0.269 0 0.269"
+              material="emissive:#ffeeaa; emissiveIntensity:1.2;"
+            ></a-sphere>
+            <a-sphere
+              color="#fff8dd"
+              radius="0.055"
+              position="-0.38 0 0"
+              material="emissive:#ffeeaa; emissiveIntensity:1.2;"
+            ></a-sphere>
+            <a-sphere
+              color="#fff8dd"
+              radius="0.055"
+              position="-0.269 0 -0.269"
+              material="emissive:#ffeeaa; emissiveIntensity:1.2;"
+            ></a-sphere>
+            <a-sphere
+              color="#fff8dd"
+              radius="0.055"
+              position="0 0 -0.38"
+              material="emissive:#ffeeaa; emissiveIntensity:1.2;"
+            ></a-sphere>
+            <a-sphere
+              color="#fff8dd"
+              radius="0.055"
+              position="0.269 0 -0.269"
+              material="emissive:#ffeeaa; emissiveIntensity:1.2;"
+            ></a-sphere>
+          </a-entity>
+
+          <!-- Decorative top torus -->
+          <a-torus
+            color="#ffd700"
+            radius="0.38"
+            tube="0.025"
+            position="0 1.58 0"
+            rotation="90 0 0"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          >
+          </a-torus>
+
+          <!-- ══════════════════════════════════
+           SECTION 2: UPPER NECK
+           ══════════════════════════════════ -->
+          <a-cylinder
+            color="#c89000"
+            radius-top="0.28"
+            radius-bottom="0.52"
+            height="0.38"
+            position="0 1.34 0"
+            material="emissive:#996600; emissiveIntensity:0.5; metalness:0.6; roughness:0.3;"
+          >
+          </a-cylinder>
+
+          <!-- Neck band rings (3 decorative) -->
+          <a-torus
+            color="#ffd700"
+            radius="0.32"
+            tube="0.022"
+            position="0 1.45 0"
+            rotation="90 0 0"
+            material="emissive:#cc9900; emissiveIntensity:0.6;"
+          >
+          </a-torus>
+          <a-torus
+            color="#ffd700"
+            radius="0.40"
+            tube="0.022"
+            position="0 1.30 0"
+            rotation="90 0 0"
+            material="emissive:#cc9900; emissiveIntensity:0.6;"
+          >
+          </a-torus>
+          <a-torus
+            color="#ffd700"
+            radius="0.50"
+            tube="0.022"
+            position="0 1.17 0"
+            rotation="90 0 0"
+            material="emissive:#cc9900; emissiveIntensity:0.6;"
+          >
+          </a-torus>
+
+          <!-- ══════════════════════════════════
+           SECTION 3: MAIN UPPER BODY
+           Height ~1.2m, radius ~0.7m
+           ══════════════════════════════════ -->
+
+          <!-- Upper body glow panels (8 sides) -->
+          <a-plane
+            color="#ff4400"
+            width="0.52"
+            height="1.1"
+            position="0.72 0.55 0"
+            rotation="0 90 0"
+            material="transparent:true; opacity:0.88; emissive:#dd2200; emissiveIntensity:0.8; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff4400"
+            width="0.52"
+            height="1.1"
+            position="0.509 0.55 0.509"
+            rotation="0 45 0"
+            material="transparent:true; opacity:0.88; emissive:#dd2200; emissiveIntensity:0.8; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff4400"
+            width="0.52"
+            height="1.1"
+            position="0 0.55 0.72"
+            rotation="0 0 0"
+            material="transparent:true; opacity:0.88; emissive:#dd2200; emissiveIntensity:0.8; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff4400"
+            width="0.52"
+            height="1.1"
+            position="-0.509 0.55 0.509"
+            rotation="0 -45 0"
+            material="transparent:true; opacity:0.88; emissive:#dd2200; emissiveIntensity:0.8; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff4400"
+            width="0.52"
+            height="1.1"
+            position="-0.72 0.55 0"
+            rotation="0 90 0"
+            material="transparent:true; opacity:0.88; emissive:#dd2200; emissiveIntensity:0.8; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff4400"
+            width="0.52"
+            height="1.1"
+            position="-0.509 0.55 -0.509"
+            rotation="0 45 0"
+            material="transparent:true; opacity:0.88; emissive:#dd2200; emissiveIntensity:0.8; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff4400"
+            width="0.52"
+            height="1.1"
+            position="0 0.55 -0.72"
+            rotation="0 0 0"
+            material="transparent:true; opacity:0.88; emissive:#dd2200; emissiveIntensity:0.8; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff4400"
+            width="0.52"
+            height="1.1"
+            position="0.509 0.55 -0.509"
+            rotation="0 -45 0"
+            material="transparent:true; opacity:0.88; emissive:#dd2200; emissiveIntensity:0.8; side:double;"
+          >
+          </a-plane>
+
+          <!-- Upper body vertical frame ribs (8) -->
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.2"
+            position="0.72 0.55 0"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.2"
+            position="0.509 0.55 0.509"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.2"
+            position="0 0.55 0.72"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.2"
+            position="-0.509 0.55 0.509"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.2"
+            position="-0.72 0.55 0"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.2"
+            position="-0.509 0.55 -0.509"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.2"
+            position="0 0.55 -0.72"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.2"
+            position="0.509 0.55 -0.509"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+
+          <!-- Mid equatorial band -->
+          <a-torus
+            color="#ffd700"
+            radius="0.74"
+            tube="0.03"
+            position="0 0.55 0"
+            rotation="90 0 0"
+            material="emissive:#cc9900; emissiveIntensity:0.8;"
+          >
+          </a-torus>
+
+          <!-- ══════════════════════════════════
+           SECTION 4: WAIST DISC
+           ══════════════════════════════════ -->
+          <a-cylinder
+            color="#b8860b"
+            radius="0.85"
+            height="0.10"
+            position="0 0.0 0"
+            material="emissive:#996600; emissiveIntensity:0.5; metalness:0.7; roughness:0.25;"
+          >
+          </a-cylinder>
+          <a-torus
+            color="#ffd700"
+            radius="0.85"
+            tube="0.03"
+            position="0 0.05 0"
+            rotation="90 0 0"
+            material="emissive:#cc9900; emissiveIntensity:0.7;"
+          >
+          </a-torus>
+          <a-torus
+            color="#ffd700"
+            radius="0.85"
+            tube="0.03"
+            position="0 -0.05 0"
+            rotation="90 0 0"
+            material="emissive:#cc9900; emissiveIntensity:0.7;"
+          >
+          </a-torus>
+
+          <!-- Waist jewel dots (8) -->
+          <a-sphere
+            color="#ffee88"
+            radius="0.06"
+            position="0.85 0.0 0"
+            material="emissive:#ffcc00; emissiveIntensity:2;"
+          ></a-sphere>
+          <a-sphere
+            color="#ffee88"
+            radius="0.06"
+            position="0.601 0.0 0.601"
+            material="emissive:#ffcc00; emissiveIntensity:2;"
+          ></a-sphere>
+          <a-sphere
+            color="#ffee88"
+            radius="0.06"
+            position="0 0.0 0.85"
+            material="emissive:#ffcc00; emissiveIntensity:2;"
+          ></a-sphere>
+          <a-sphere
+            color="#ffee88"
+            radius="0.06"
+            position="-0.601 0.0 0.601"
+            material="emissive:#ffcc00; emissiveIntensity:2;"
+          ></a-sphere>
+          <a-sphere
+            color="#ffee88"
+            radius="0.06"
+            position="-0.85 0.0 0"
+            material="emissive:#ffcc00; emissiveIntensity:2;"
+          ></a-sphere>
+          <a-sphere
+            color="#ffee88"
+            radius="0.06"
+            position="-0.601 0.0 -0.601"
+            material="emissive:#ffcc00; emissiveIntensity:2;"
+          ></a-sphere>
+          <a-sphere
+            color="#ffee88"
+            radius="0.06"
+            position="0 0.0 -0.85"
+            material="emissive:#ffcc00; emissiveIntensity:2;"
+          ></a-sphere>
+          <a-sphere
+            color="#ffee88"
+            radius="0.06"
+            position="0.601 0.0 -0.601"
+            material="emissive:#ffcc00; emissiveIntensity:2;"
+          ></a-sphere>
+
+          <!-- ══════════════════════════════════
+           SECTION 5: LOWER BODY (wider)
+           ══════════════════════════════════ -->
+
+          <!-- Lower body panels (8 sides, wider + taller) -->
+          <a-plane
+            color="#ff3300"
+            width="0.62"
+            height="1.0"
+            position="0.78 -0.60 0"
+            rotation="0 90 0"
+            material="transparent:true; opacity:0.90; emissive:#bb1100; emissiveIntensity:1.0; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff3300"
+            width="0.62"
+            height="1.0"
+            position="0.552 -0.60 0.552"
+            rotation="0 45 0"
+            material="transparent:true; opacity:0.90; emissive:#bb1100; emissiveIntensity:1.0; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff3300"
+            width="0.62"
+            height="1.0"
+            position="0 -0.60 0.78"
+            rotation="0 0 0"
+            material="transparent:true; opacity:0.90; emissive:#bb1100; emissiveIntensity:1.0; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff3300"
+            width="0.62"
+            height="1.0"
+            position="-0.552 -0.60 0.552"
+            rotation="0 -45 0"
+            material="transparent:true; opacity:0.90; emissive:#bb1100; emissiveIntensity:1.0; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff3300"
+            width="0.62"
+            height="1.0"
+            position="-0.78 -0.60 0"
+            rotation="0 90 0"
+            material="transparent:true; opacity:0.90; emissive:#bb1100; emissiveIntensity:1.0; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff3300"
+            width="0.62"
+            height="1.0"
+            position="-0.552 -0.60 -0.552"
+            rotation="0 45 0"
+            material="transparent:true; opacity:0.90; emissive:#bb1100; emissiveIntensity:1.0; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff3300"
+            width="0.62"
+            height="1.0"
+            position="0 -0.60 -0.78"
+            rotation="0 0 0"
+            material="transparent:true; opacity:0.90; emissive:#bb1100; emissiveIntensity:1.0; side:double;"
+          >
+          </a-plane>
+          <a-plane
+            color="#ff3300"
+            width="0.62"
+            height="1.0"
+            position="0.552 -0.60 -0.552"
+            rotation="0 -45 0"
+            material="transparent:true; opacity:0.90; emissive:#bb1100; emissiveIntensity:1.0; side:double;"
+          >
+          </a-plane>
+
+          <!-- Lower ribs (8) -->
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.1"
+            position="0.78 -0.60 0"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.1"
+            position="0.552 -0.60 0.552"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.1"
+            position="0 -0.60 0.78"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.1"
+            position="-0.552 -0.60 0.552"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.1"
+            position="-0.78 -0.60 0"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.1"
+            position="-0.552 -0.60 -0.552"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.1"
+            position="0 -0.60 -0.78"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.025"
+            height="1.1"
+            position="0.552 -0.60 -0.552"
+            material="emissive:#aa7700; emissiveIntensity:0.5;"
+          ></a-cylinder>
+
+          <!-- Lower mid ring -->
+          <a-torus
+            color="#ffd700"
+            radius="0.80"
+            tube="0.028"
+            position="0 -0.60 0"
+            rotation="90 0 0"
+            material="emissive:#cc9900; emissiveIntensity:0.7;"
+          >
+          </a-torus>
+
+          <!-- ══════════════════════════════════
+           SECTION 6: BASE CAP
+           ══════════════════════════════════ -->
+          <a-cylinder
+            color="#c89000"
+            radius-top="0.78"
+            radius-bottom="0.55"
+            height="0.28"
+            position="0 -1.25 0"
+            material="emissive:#996600; emissiveIntensity:0.5; metalness:0.7; roughness:0.3;"
+          >
+          </a-cylinder>
+          <a-torus
+            color="#ffd700"
+            radius="0.78"
+            tube="0.03"
+            position="0 -1.12 0"
+            rotation="90 0 0"
+            material="emissive:#cc9900; emissiveIntensity:0.6;"
+          >
+          </a-torus>
+          <a-torus
+            color="#ffd700"
+            radius="0.64"
+            tube="0.025"
+            position="0 -1.34 0"
+            rotation="90 0 0"
+            material="emissive:#cc9900; emissiveIntensity:0.6;"
+          >
+          </a-torus>
+          <a-cylinder
+            color="#c89000"
+            radius="0.55"
+            height="0.10"
+            position="0 -1.44 0"
+            material="emissive:#996600; emissiveIntensity:0.4; metalness:0.8;"
+          >
+          </a-cylinder>
+
+          <!-- ══════════════════════════════════
+           SECTION 7: LONG TASSELS (12)
+           ══════════════════════════════════ -->
+          <!-- 12 tassels arranged in a circle, long (0.6m) -->
+          <a-cylinder
+            color="#ff6600"
+            radius="0.018"
+            height="0.55"
+            position="0.45 -1.78 0"
+            material="emissive:#cc3300; emissiveIntensity:0.6;"
+            animation="property:rotation; from:0 0 0; to:0 0 8; loop:true; dur:2000; dir:alternate; easing:easeInOutSine;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffaa00"
+            radius="0.018"
+            height="0.55"
+            position="0.225 -1.78 0.39"
+            material="emissive:#cc6600; emissiveIntensity:0.6;"
+            animation="property:rotation; from:0 0 0; to:0 0 -8; loop:true; dur:2200; dir:alternate; easing:easeInOutSine;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ff6600"
+            radius="0.018"
+            height="0.55"
+            position="-0.225 -1.78 0.39"
+            material="emissive:#cc3300; emissiveIntensity:0.6;"
+            animation="property:rotation; from:0 0 0; to:0 0 8; loop:true; dur:1800; dir:alternate; easing:easeInOutSine;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffaa00"
+            radius="0.018"
+            height="0.55"
+            position="-0.45 -1.78 0"
+            material="emissive:#cc6600; emissiveIntensity:0.6;"
+            animation="property:rotation; from:0 0 0; to:0 0 -8; loop:true; dur:2100; dir:alternate; easing:easeInOutSine;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ff6600"
+            radius="0.018"
+            height="0.55"
+            position="-0.225 -1.78 -0.39"
+            material="emissive:#cc3300; emissiveIntensity:0.6;"
+            animation="property:rotation; from:0 0 0; to:0 0 8; loop:true; dur:1900; dir:alternate; easing:easeInOutSine;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffaa00"
+            radius="0.018"
+            height="0.55"
+            position="0.225 -1.78 -0.39"
+            material="emissive:#cc6600; emissiveIntensity:0.6;"
+            animation="property:rotation; from:0 0 0; to:0 0 -8; loop:true; dur:2300; dir:alternate; easing:easeInOutSine;"
+          ></a-cylinder>
+          <!-- Inner 6 shorter tassels -->
+          <a-cylinder
+            color="#ffd700"
+            radius="0.012"
+            height="0.40"
+            position="0.20 -1.72 0"
+            material="emissive:#cc9900; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.012"
+            height="0.40"
+            position="0.10 -1.72 0.173"
+            material="emissive:#cc9900; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.012"
+            height="0.40"
+            position="-0.10 -1.72 0.173"
+            material="emissive:#cc9900; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.012"
+            height="0.40"
+            position="-0.20 -1.72 0"
+            material="emissive:#cc9900; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.012"
+            height="0.40"
+            position="-0.10 -1.72 -0.173"
+            material="emissive:#cc9900; emissiveIntensity:0.5;"
+          ></a-cylinder>
+          <a-cylinder
+            color="#ffd700"
+            radius="0.012"
+            height="0.40"
+            position="0.10 -1.72 -0.173"
+            material="emissive:#cc9900; emissiveIntensity:0.5;"
+          ></a-cylinder>
+
+          <!-- ══════════════════════════════════
+           SECTION 8: INNER FIRE / GLOW CORE
+           ══════════════════════════════════ -->
+
+          <!-- Outer warm glow volume (large, transparent) -->
+          <a-sphere
+            color="#ff8800"
+            radius="0.85"
+            position="0 0 0"
+            material="transparent:true; opacity:0.12; emissive:#ff6600; emissiveIntensity:1; side:double;"
+            animation="property:scale; from:1 1 1; to:1.08 1.08 1.08; loop:true; dur:1600; dir:alternate; easing:easeInOutSine"
+          >
+          </a-sphere>
+
+          <!-- Mid glow -->
+          <a-sphere
+            color="#ffcc00"
+            radius="0.55"
+            position="0 0 0"
+            material="transparent:true; opacity:0.20; emissive:#ffaa00; emissiveIntensity:2;"
+            animation="property:scale; from:1 1 1; to:1.12 1.12 1.12; loop:true; dur:1100; dir:alternate; easing:easeInOutSine"
+          >
+          </a-sphere>
+
+          <!-- Inner bright core -->
+          <a-sphere
+            color="#ffff99"
+            radius="0.28"
+            position="0 0 0"
+            material="transparent:true; opacity:0.80; emissive:#ffffcc; emissiveIntensity:4;"
+            animation="property:material.emissiveIntensity; from:3; to:5; loop:true; dur:700; dir:alternate; easing:easeInOutSine"
+            animation__s="property:scale; from:1 1 1; to:1.18 1.18 1.18; loop:true; dur:700; dir:alternate; easing:easeInOutSine"
+          >
+          </a-sphere>
+
+          <!-- Dynamic point light (the flame) -->
+          <a-light
+            type="point"
+            color="#ffbb44"
+            intensity="4"
+            distance="8"
+            position="0 0 0"
+            id="flame-light"
+            animation="property:intensity; from:3; to:6; loop:true; dur:400; dir:alternate; easing:easeInOutSine"
+          >
+          </a-light>
+
+          <!-- Upper warm fill -->
+          <a-light
+            type="point"
+            color="#ff8800"
+            intensity="1.5"
+            distance="5"
+            position="0 0.8 0"
+          ></a-light>
+        </a-entity>
+        <!-- end lantern-root -->
+
+        <!-- ══════════════════════════════════
+         GROUND EFFECTS (not rotating with lantern)
+         ══════════════════════════════════ -->
+
+        <!-- Ground glow pool (large) -->
+        <a-circle
+          color="#ff6600"
+          radius="1.8"
+          rotation="-90 0 0"
+          position="0 0.02 0"
+          material="transparent:true; opacity:0.12; emissive:#ff4400; emissiveIntensity:1.5;"
+          animation="property:scale; from:1 1 1; to:1.15 1 1.15; loop:true; dur:2500; dir:alternate; easing:easeInOutSine"
+        >
+        </a-circle>
+
+        <!-- Inner ground glow (brighter centre) -->
+        <a-circle
+          color="#ffcc00"
+          radius="0.8"
+          rotation="-90 0 0"
+          position="0 0.025 0"
+          material="transparent:true; opacity:0.18; emissive:#ffaa00; emissiveIntensity:2;"
+          animation="property:scale; from:1 1 1; to:1.2 1 1.2; loop:true; dur:1800; dir:alternate; easing:easeInOutSine"
+        >
+        </a-circle>
+
+        <!-- Slow outer rotating sparkle ring -->
+        <a-torus
+          color="#ffdd88"
+          radius="1.4"
+          tube="0.018"
+          rotation="90 0 0"
+          position="0 0.05 0"
+          material="emissive:#ffcc44; emissiveIntensity:1.8; transparent:true; opacity:0.45;"
+          animation="property:rotation; from:90 0 0; to:90 360 0; loop:true; dur:10000; easing:linear"
+        >
+        </a-torus>
+
+        <!-- Inner spinning ring (opposite direction) -->
+        <a-torus
+          color="#ffa500"
+          radius="1.0"
+          tube="0.012"
+          rotation="90 0 0"
+          position="0 0.05 0"
+          material="emissive:#ff8800; emissiveIntensity:1.5; transparent:true; opacity:0.4;"
+          animation="property:rotation; from:90 0 0; to:90 -360 0; loop:true; dur:7000; easing:linear"
+        >
+        </a-torus>
+
+        <!-- Vertical rising sparkle ring (tilted) -->
+        <a-torus
+          color="#ffffff"
+          radius="0.9"
+          tube="0.008"
+          position="0 1.5 0"
+          material="emissive:#fff8dd; emissiveIntensity:2; transparent:true; opacity:0.25;"
+          animation="property:rotation; from:0 0 0; to:0 360 0; loop:true; dur:8000; easing:linear"
+          animation__scale="property:scale; from:1 1 1; to:1.3 1.3 1.3; loop:true; dur:3000; dir:alternate; easing:easeInOutSine"
+        >
+        </a-torus>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+      // Splash fade after 3.8s
+      setTimeout(() => {
+        document.getElementById("splash").classList.add("fade");
+        setTimeout(() => {
+          document.getElementById("splash").style.display = "none";
+          document.getElementById("hud").classList.add("show");
+        }, 1200);
+      }, 3800);
+    </script>
+  </body>
+</html>
