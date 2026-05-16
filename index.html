@@ -1,257 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebXR · Vesak Lantern (Atapattama)</title>
-  
-  <!-- A-Frame core -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>WebXR Atapattama Vesak Lantern</title>
+
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
   <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&display=swap');
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { overflow:hidden; background:#000; font-family:'Cinzel', serif; }
+
     #ui {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 10;
-      background: rgba(10, 10, 20, 0.8);
-      backdrop-filter: blur(4px);
-      color: #f0f5ff;
-      padding: 18px 24px;
-      border-radius: 28px;
-      border: 1px solid rgba(255, 200, 50, 0.6);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
-      pointer-events: none;
-      transition: opacity 0.4s;
-      max-width: 300px;
+      position:fixed; top:20px; left:20px; z-index:10;
+      background:rgba(0,0,0,0.75);
+      border:1px solid rgba(0,220,100,0.5);
+      box-shadow:0 0 20px rgba(0,255,120,0.2), inset 0 0 20px rgba(0,0,0,0.5);
+      padding:16px 22px; border-radius:14px;
+      transition:opacity 0.5s;
+      backdrop-filter:blur(10px);
     }
     #ui h1 {
-      margin: 0;
-      font-weight: 500;
-      font-size: 1.6rem;
-      color: #ffe07a;
-      letter-spacing: 2px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      margin:0; color:#00ff88;
+      font-family:'Cinzel Decorative', serif;
+      font-size:1rem; letter-spacing:.1em;
+      text-shadow:0 0 14px rgba(0,255,120,0.8);
     }
-    #ui p {
-      margin: 10px 0 0;
-      font-size: 0.9rem;
-      opacity: 0.9;
-      line-height: 1.4;
-    }
-    #ui .badge {
-      background: #ffb347;
-      color: #111;
-      border-radius: 40px;
-      padding: 0 12px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      display: inline-block;
-      margin-top: 6px;
-    }
-    @media (max-width: 600px) {
-      #ui { top: 10px; left: 10px; padding: 12px 16px; }
-      #ui h1 { font-size: 1.2rem; }
-    }
+    #ui p { margin:6px 0 0; font-size:.75rem; color:#ddd; letter-spacing:.05em; }
+    #ui .sub { color:rgba(0,220,100,0.7); font-size:.68rem; margin-top:4px; letter-spacing:.08em; }
   </style>
 </head>
 <body>
-  <div id="ui">
-    <h1>🪔 Atapattama</h1>
-    <p>Vesak lantern · <span style="color:#ffd966;">AR ready</span></p>
-    <span class="badge">tap bottom-right AR</span>
-  </div>
 
-  <a-scene webxr="referenceSpaceType: local-floor; requiredFeatures: local-floor">
-    <!-- ambient + subtle fill -->
-    <a-light type="ambient" color="#2a2a3a" intensity="0.6"></a-light>
-    <a-light type="directional" position="1 3 2" color="#ffeedd" intensity="0.8"></a-light>
+<div id="ui">
+  <h1>🪔 Atapattama AR</h1>
+  <p>Tap <b style="color:#00ff88">AR</b> button (bottom-right)</p>
+  <p class="sub">Lantern appears 4m in front of you</p>
+</div>
 
-    <!-- MAIN LANTERN: positioned 4m in front of user (x:0, z:-4) -->
-    <a-entity position="0 2.0 -4" scale="1.8 1.8 1.8">
-      
-      <!-- whole lantern rotates slowly -->
-      <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear;">
-        
-        <!-- ========== BASE / PEDESTAL (hexagonal) ========== -->
-        <a-entity position="0 -0.55 0">
-          <!-- main floor disc -->
-          <a-cylinder radius="0.85" height="0.08" color="#1e2b1f" material="roughness:0.7; metalness:0.2"></a-cylinder>
-          <!-- cutout patterns: a ring of small cylinders to simulate perforations -->
-          <a-entity position="0 0.05 0" rotation="0 0 0">
-            <!-- using a ring of cylinders for decorative floor holes -->
-            <a-cylinder radius="0.02" height="0.1" color="#ffdb7c" material="emissive: #f0b34b; emissiveIntensity: 2" position="0.65 0 0"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.1" color="#ffdb7c" material="emissive: #f0b34b; emissiveIntensity: 2" position="-0.65 0 0"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.1" color="#ffdb7c" material="emissive: #f0b34b; emissiveIntensity: 2" position="0 0 0.65"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.1" color="#ffdb7c" material="emissive: #f0b34b; emissiveIntensity: 2" position="0 0 -0.65"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.1" color="#ffdb7c" material="emissive: #f0b34b; emissiveIntensity: 2" position="0.46 0 0.46"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.1" color="#ffdb7c" material="emissive: #f0b34b; emissiveIntensity: 2" position="-0.46 0 -0.46"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.1" color="#ffdb7c" material="emissive: #f0b34b; emissiveIntensity: 2" position="0.46 0 -0.46"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.1" color="#ffdb7c" material="emissive: #f0b34b; emissiveIntensity: 2" position="-0.46 0 0.46"></a-cylinder>
-          </a-entity>
-          
-          <!-- skirt / fringe (blue) -->
-          <a-entity position="0 -0.12 0">
-            <a-cylinder radius="0.86" height="0.04" color="#1c3a5c" material="emissive: #0f2b4a; emissiveIntensity: 0.6"></a-cylinder>
-            <!-- fringe cylinders -->
-            <a-cylinder radius="0.02" height="0.12" color="#1f4a7a" position="0.82 -0.08 0"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.12" color="#1f4a7a" position="-0.82 -0.08 0"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.12" color="#1f4a7a" position="0  -0.08 0.82"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.12" color="#1f4a7a" position="0  -0.08 -0.82"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.12" color="#1f4a7a" position="0.58 -0.08 0.58"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.12" color="#1f4a7a" position="-0.58 -0.08 -0.58"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.12" color="#1f4a7a" position="0.58 -0.08 -0.58"></a-cylinder>
-            <a-cylinder radius="0.02" height="0.12" color="#1f4a7a" position="-0.58 -0.08 0.58"></a-cylinder>
-          </a-entity>
-        </a-entity>
+<!--
+  WebXR scene — no marker needed.
+  Lantern spawns at position="0 3 -4" (4m ahead, 3m up)
+  scale="2 2 2" makes it ~4m tall in real space
+-->
+<a-scene webxr="referenceSpaceType:local-floor; requiredFeatures:local-floor">
 
-        <!-- ========== LOWER BULB (hexagonal lantern body) ========== -->
-        <a-entity position="0 -0.3 0">
-          <!-- two octahedrons create the faceted lower section -->
-          <a-octahedron radius="0.45" color="#2c7a2c" material="wireframe: false; emissive: #1f6b1f; emissiveIntensity: 0.9; opacity: 0.85; transparent: true"></a-octahedron>
-          <a-octahedron radius="0.44" color="#4ca84c" material="emissive: #7acf4a; emissiveIntensity: 1.2; opacity: 0.4; transparent: true"></a-octahedron>
-          <!-- decorative ridges / filigree -->
-          <a-entity rotation="0 30 0">
-            <a-box position="0.38 0 0" scale="0.02 0.12 0.02" color="#e6c87a"></a-box>
-            <a-box position="-0.38 0 0" scale="0.02 0.12 0.02" color="#e6c87a"></a-box>
-            <a-box position="0 0 0.38" scale="0.02 0.12 0.02" color="#e6c87a"></a-box>
-            <a-box position="0 0 -0.38" scale="0.02 0.12 0.02" color="#e6c87a"></a-box>
-          </a-entity>
-        </a-entity>
+  <!-- ═══════════════════════════════════════════════════
+       MASTER LANTERN ANCHOR
+       position: 4m in front (z=-4), 1m up (y=1) from floor
+       scale: 2x makes each unit = 2m
+  ═══════════════════════════════════════════════════ -->
+  <a-entity id="lantern-anchor" position="0 1.2 -4" scale="2 2 2">
 
-        <!-- ========== MIDDLE RING / connecting frame ========== -->
-        <a-entity position="0 0.0 0">
-          <a-ring radius-inner="0.25" radius-outer="0.35" color="#3b5e3b" material="emissive: #2b4a2b; emissiveIntensity: 0.5"></a-ring>
-          <!-- small decorative pom-poms (blue) -->
-          <a-sphere radius="0.07" color="#3f7fb0" material="emissive: #1a4f7a; emissiveIntensity: 0.6" position="0.4 0.1 0"></a-sphere>
-          <a-sphere radius="0.07" color="#3f7fb0" material="emissive: #1a4f7a; emissiveIntensity: 0.6" position="-0.4 0.1 0"></a-sphere>
-          <a-sphere radius="0.07" color="#3f7fb0" material="emissive: #1a4f7a; emissiveIntensity: 0.6" position="0 0.1 0.4"></a-sphere>
-          <a-sphere radius="0.07" color="#3f7fb0" material="emissive: #1a4f7a; emissiveIntensity: 0.6" position="0 0.1 -0.4"></a-sphere>
-        </a-entity>
+    <!-- ── Global slow rotation wrapper ── -->
+    <a-entity id="spin"
+      animation="property:rotation; to:0 360 0; loop:true; dur:25000; easing:linear">
 
-        <!-- ========== HANGING LAMPS (4 small blue lanterns) ========== -->
-        <!-- lamp 1 -->
-        <a-entity position="0.65 0.05 0">
-          <a-cylinder radius="0.12" height="0.18" color="#1f4f7a" material="emissive: #2a6b9e; emissiveIntensity: 1.2"></a-cylinder>
-          <a-cylinder radius="0.08" height="0.04" color="#d4af37" position="0 0.11 0"></a-cylinder>
-          <a-cylinder radius="0.02" height="0.14" color="#b0c4de" position="0 -0.06 0"></a-cylinder>
-          <a-sphere radius="0.05" color="#2f7fb0" position="0 -0.15 0"></a-sphere>
-        </a-entity>
-        <!-- lamp 2 -->
-        <a-entity position="-0.65 0.05 0">
-          <a-cylinder radius="0.12" height="0.18" color="#1f4f7a" material="emissive: #2a6b9e; emissiveIntensity: 1.2"></a-cylinder>
-          <a-cylinder radius="0.08" height="0.04" color="#d4af37" position="0 0.11 0"></a-cylinder>
-          <a-cylinder radius="0.02" height="0.14" color="#b0c4de" position="0 -0.06 0"></a-cylinder>
-          <a-sphere radius="0.05" color="#2f7fb0" position="0 -0.15 0"></a-sphere>
-        </a-entity>
-        <!-- lamp 3 -->
-        <a-entity position="0 0.05 0.65">
-          <a-cylinder radius="0.12" height="0.18" color="#1f4f7a" material="emissive: #2a6b9e; emissiveIntensity: 1.2"></a-cylinder>
-          <a-cylinder radius="0.08" height="0.04" color="#d4af37" position="0 0.11 0"></a-cylinder>
-          <a-cylinder radius="0.02" height="0.14" color="#b0c4de" position="0 -0.06 0"></a-cylinder>
-          <a-sphere radius="0.05" color="#2f7fb0" position="0 -0.15 0"></a-sphere>
-        </a-entity>
-        <!-- lamp 4 -->
-        <a-entity position="0 0.05 -0.65">
-          <a-cylinder radius="0.12" height="0.18" color="#1f4f7a" material="emissive: #2a6b9e; emissiveIntensity: 1.2"></a-cylinder>
-          <a-cylinder radius="0.08" height="0.04" color="#d4af37" position="0 0.11 0"></a-cylinder>
-          <a-cylinder radius="0.02" height="0.14" color="#b0c4de" position="0 -0.06 0"></a-cylinder>
-          <a-sphere radius="0.05" color="#2f7fb0" position="0 -0.15 0"></a-sphere>
-        </a-entity>
-        <!-- connecting bars to lamps -->
-        <a-entity position="0 0.15 0">
-          <a-cylinder radius="0.01" height="0.5" color="#b8913a" rotation="0 0 90" position="0.35 0 0"></a-cylinder>
-          <a-cylinder radius="0.01" height="0.5" color="#b8913a" rotation="0 0 -90" position="-0.35 0 0"></a-cylinder>
-          <a-cylinder radius="0.01" height="0.5" color="#b8913a" rotation="90 0 0" position="0 0 0.35"></a-cylinder>
-          <a-cylinder radius="0.01" height="0.5" color="#b8913a" rotation="-90 0 0" position="0 0 -0.35"></a-cylinder>
-        </a-entity>
+      <!-- ═══════════════════════════════════════
+           TIER 1: TOP OCTAGONAL CROWN
+           Flat octagonal disc with green glow panels
+           + LED spike rays radiating outward
+      ═══════════════════════════════════════ -->
 
-        <!-- ========== UPPER BODY (tapered, with tree motifs) ========== -->
-        <a-entity position="0 0.35 0">
-          <!-- main tapered cylinder -->
-          <a-cylinder radius-top="0.28" radius-bottom="0.45" height="0.55" color="#1f5c2a" material="emissive: #2d7a3a; emissiveIntensity: 0.7"></a-cylinder>
-          <!-- ornamental tree cutouts (green glowing) -->
-          <a-entity position="0 0.1 0" rotation="0 0 0">
-            <a-plane width="0.15" height="0.2" color="#67d96a" material="emissive: #5fcf5f; emissiveIntensity: 2; transparent: true; opacity: 0.9" position="0.38 0.15 0"></a-plane>
-            <a-plane width="0.15" height="0.2" color="#67d96a" material="emissive: #5fcf5f; emissiveIntensity: 2; transparent: true; opacity: 0.9" position="-0.38 0.15 0"></a-plane>
-            <a-plane width="0.15" height="0.2" color="#67d96a" material="emissive: #5fcf5f; emissiveIntensity: 2; transparent: true; opacity: 0.9" position="0 0.15 0.38"></a-plane>
-            <a-plane width="0.15" height="0.2" color="#67d96a" material="emissive: #5fcf5f; emissiveIntensity: 2; transparent: true; opacity: 0.9" position="0 0.15 -0.38"></a-plane>
-          </a-entity>
-        </a-entity>
+      <!-- Top crown disc (dark frame) -->
+      <a-cylinder color="#111a11" radius="1.05" height="0.14" position="0 1.85 0"
+        material="emissive:#002200; emissiveIntensity:0.3; metalness:0.8; roughness:0.3;">
+      </a-cylinder>
 
-        <!-- ========== TOP CANOPY (hexagonal roof) ========== -->
-        <a-entity position="0 0.7 0">
-          <!-- main disc -->
-          <a-cylinder radius="0.6" height="0.06" color="#1f3a1f" material="emissive: #2c572c; emissiveIntensity: 0.3"></a-cylinder>
-          <!-- edge decoration (green filigree) -->
-          <a-entity rotation="0 0 0">
-            <a-box scale="0.3 0.02 0.02" color="#b7e34d" position="0.55 0.04 0"></a-box>
-            <a-box scale="0.3 0.02 0.02" color="#b7e34d" position="-0.55 0.04 0"></a-box>
-            <a-box scale="0.3 0.02 0.02" color="#b7e34d" position="0 0.04 0.55"></a-box>
-            <a-box scale="0.3 0.02 0.02" color="#b7e34d" position="0 0.04 -0.55"></a-box>
-          </a-entity>
-          <!-- upper spikes / pins -->
-          <a-entity position="0 0.12 0">
-            <a-cylinder radius="0.008" height="0.25" color="#f5e56b" material="emissive: #f0d54a; emissiveIntensity: 1.5" position="0.4 0.08 0"></a-cylinder>
-            <a-cylinder radius="0.008" height="0.25" color="#f5e56b" material="emissive: #f0d54a; emissiveIntensity: 1.5" position="-0.4 0.08 0"></a-cylinder>
-            <a-cylinder radius="0.008" height="0.25" color="#f5e56b" material="emissive: #f0d54a; emissiveIntensity: 1.5" position="0 0.08 0.4"></a-cylinder>
-            <a-cylinder radius="0.008" height="0.25" color="#f5e56b" material="emissive: #f0d54a; emissiveIntensity: 1.5" position="0 0.08 -0.4"></a-cylinder>
-            <a-cylinder radius="0.008" height="0.25" color="#f5e56b" material="emissive: #f0d54a; emissiveIntensity: 1.5" position="0.28 0.08 0.28"></a-cylinder>
-            <a-cylinder radius="0.008" height="0.25" color="#f5e56b" material="emissive: #f0d54a; emissiveIntensity: 1.5" position="-0.28 0.08 -0.28"></a-cylinder>
-            <a-cylinder radius="0.008" height="0.25" color="#f5e56b" material="emissive: #f0d54a; emissiveIntensity: 1.5" position="0.28 0.08 -0.28"></a-cylinder>
-            <a-cylinder radius="0.008" height="0.25" color="#f5e56b" material="emissive: #f0d54a; emissiveIntensity: 1.5" position="-0.28 0.08 0.28"></a-cylinder>
-          </a-entity>
-          <!-- topmost finial -->
-          <a-sphere radius="0.07" color="#d4af37" position="0 0.22 0"></a-sphere>
-          <a-cylinder radius="0.02" height="0.1" color="#d4af37" position="0 0.31 0"></a-cylinder>
-        </a-entity>
+      <!-- Green glowing top panels (8 panels of octagon) -->
+      <a-plane color="#00ff55" width="0.72" height="0.32" position="1.0 1.85 0"    rotation="0 90 0"  material="emissive:#00cc44; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#00ff55" width="0.72" height="0.32" position="0.707 1.85 0.707" rotation="0 45 0"  material="emissive:#00cc44; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#00ff55" width="0.72" height="0.32" position="0 1.85 1.0"    rotation="0 0 0"   material="emissive:#00cc44; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#00ff55" width="0.72" height="0.32" position="-0.707 1.85 0.707" rotation="0 -45 0" material="emissive:#00cc44; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#00ff55" width="0.72" height="0.32" position="-1.0 1.85 0"   rotation="0 90 0"  material="emissive:#00cc44; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#00ff55" width="0.72" height="0.32" position="-0.707 1.85 -0.707" rotation="0 45 0" material="emissive:#00cc44; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#00ff55" width="0.72" height="0.32" position="0 1.85 -1.0"   rotation="0 0 0"   material="emissive:#00cc44; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#00ff55" width="0.72" height="0.32" position="0.707 1.85 -0.707" rotation="0 -45 0" material="emissive:#00cc44; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
 
-        <!-- ========== FLOATING ORBS / GLOW ========== -->
-        <a-entity animation="property: rotation; to: 0 -360 0; loop: true; dur: 7000; easing: linear;">
-          <a-sphere radius="0.045" color="#ffdd77" material="emissive: #ffb347; emissiveIntensity: 3" position="0.9 0.2 0"></a-sphere>
-          <a-sphere radius="0.045" color="#ffdd77" material="emissive: #ffb347; emissiveIntensity: 3" position="-0.9 0.2 0"></a-sphere>
-          <a-sphere radius="0.045" color="#ffdd77" material="emissive: #ffb347; emissiveIntensity: 3" position="0 0.2 0.9"></a-sphere>
-          <a-sphere radius="0.045" color="#ffdd77" material="emissive: #ffb347; emissiveIntensity: 3" position="0 0.2 -0.9"></a-sphere>
-        </a-entity>
+      <!-- Top inner glow disc -->
+      <a-circle color="#00ff88" radius="0.92" position="0 1.93 0" rotation="-90 0 0"
+        material="emissive:#00ff66; emissiveIntensity:1.5; transparent:true; opacity:0.5;"
+        animation="property:material.emissiveIntensity; from:1.0; to:2.5; loop:true; dur:1800; dir:alternate; easing:easeInOutSine">
+      </a-circle>
+
+      <!-- Bottom ring of top tier -->
+      <a-torus color="#1a2a1a" radius="1.0" tube="0.04" position="0 1.78 0" rotation="90 0 0"
+        material="emissive:#004400; emissiveIntensity:0.4; metalness:0.9;">
+      </a-torus>
+
+      <!-- ── LED SPIKE RAYS (16 spikes radiating from top) ── -->
+      <!-- 8 main + 8 between, all tipped with blue LED orbs -->
+      <!-- Main 8 spikes (longer) -->
+      <a-entity position="0 1.98 0">
+        <!-- spike = thin gold rod + blue LED tip -->
+        <a-cylinder color="#c8a000" radius="0.012" height="0.55" position="1.22 0 0"   rotation="0 0 -78" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-sphere color="#4488ff" radius="0.045" position="1.52 0.1 0" material="emissive:#2255ff; emissiveIntensity:3;" animation="property:material.emissiveIntensity; from:2; to:4; loop:true; dur:600; dir:alternate;"></a-sphere>
+
+        <a-cylinder color="#c8a000" radius="0.012" height="0.55" position="0.863 0 0.863" rotation="0 -45 -78" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-sphere color="#4488ff" radius="0.045" position="1.075 0.1 1.075" material="emissive:#2255ff; emissiveIntensity:3;" animation="property:material.emissiveIntensity; from:2; to:4; loop:true; dur:800; dir:alternate;"></a-sphere>
+
+        <a-cylinder color="#c8a000" radius="0.012" height="0.55" position="0 0 1.22"   rotation="0 0 -78" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;" rotation="90 0 -78"></a-cylinder>
+        <a-sphere color="#4488ff" radius="0.045" position="0 0.1 1.52" material="emissive:#2255ff; emissiveIntensity:3;" animation="property:material.emissiveIntensity; from:2; to:4; loop:true; dur:700; dir:alternate;"></a-sphere>
+
+        <a-cylinder color="#c8a000" radius="0.012" height="0.55" position="-0.863 0 0.863" rotation="0 45 -78" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-sphere color="#4488ff" radius="0.045" position="-1.075 0.1 1.075" material="emissive:#2255ff; emissiveIntensity:3;" animation="property:material.emissiveIntensity; from:2; to:4; loop:true; dur:550; dir:alternate;"></a-sphere>
+
+        <a-cylinder color="#c8a000" radius="0.012" height="0.55" position="-1.22 0 0"  rotation="0 0 78" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-sphere color="#4488ff" radius="0.045" position="-1.52 0.1 0" material="emissive:#2255ff; emissiveIntensity:3;" animation="property:material.emissiveIntensity; from:2; to:4; loop:true; dur:650; dir:alternate;"></a-sphere>
+
+        <a-cylinder color="#c8a000" radius="0.012" height="0.55" position="-0.863 0 -0.863" rotation="0 -45 78" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-sphere color="#4488ff" radius="0.045" position="-1.075 0.1 -1.075" material="emissive:#2255ff; emissiveIntensity:3;" animation="property:material.emissiveIntensity; from:2; to:4; loop:true; dur:900; dir:alternate;"></a-sphere>
+
+        <a-cylinder color="#c8a000" radius="0.012" height="0.55" position="0 0 -1.22"  rotation="90 0 78" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-sphere color="#4488ff" radius="0.045" position="0 0.1 -1.52" material="emissive:#2255ff; emissiveIntensity:3;" animation="property:material.emissiveIntensity; from:2; to:4; loop:true; dur:750; dir:alternate;"></a-sphere>
+
+        <a-cylinder color="#c8a000" radius="0.012" height="0.55" position="0.863 0 -0.863" rotation="0 45 78" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-sphere color="#4488ff" radius="0.045" position="1.075 0.1 -1.075" material="emissive:#2255ff; emissiveIntensity:3;" animation="property:material.emissiveIntensity; from:2; to:4; loop:true; dur:850; dir:alternate;"></a-sphere>
       </a-entity>
 
-      <!-- central glow / point light -->
-      <a-light type="point" color="#ffbb44" position="0 0.5 0" intensity="1.8" animation="property: light.intensity; from: 1.8; to: 3.5; dir: alternate; loop: true; dur: 1800; easing: easeInOutSine"></a-light>
-      <a-light type="point" color="#44aaff" position="0 -0.2 0" intensity="0.6"></a-light>
-    </a-entity>
+      <!-- ═══════════════════════════════════════
+           TIER 2: UPPER FUNNEL / TREE PANELS
+           Wide-top tapering down — green glowing
+           trapezoid panels with cutout pattern
+      ═══════════════════════════════════════ -->
 
-    <!-- backdrop / stars (optional but helps AR presence) -->
-    <a-entity position="0 0 -10">
-      <a-sphere radius="0.06" color="#ffffff" material="emissive: #ffffff; emissiveIntensity: 0.4" position="-2 1 0"></a-sphere>
-      <a-sphere radius="0.04" color="#ffffff" material="emissive: #ffffff; emissiveIntensity: 0.4" position="2.5 0.5 -2"></a-sphere>
-      <a-sphere radius="0.05" color="#ffffff" material="emissive: #ffffff; emissiveIntensity: 0.4" position="-1.5 -0.5 -3"></a-sphere>
-    </a-entity>
+      <!-- Funnel frame (dark octagonal cone) -->
+      <a-cone color="#0a150a" radius-top="1.0" radius-bottom="0.55" height="0.95" position="0 1.25 0"
+        material="emissive:#002200; emissiveIntensity:0.2; metalness:0.7; roughness:0.4; transparent:true; opacity:0.6; side:double;">
+      </a-cone>
 
-  </a-scene>
+      <!-- Green glow funnel panels (8 faces, trapezoid approximated with planes) -->
+      <a-plane color="#33ff66" width="0.65" height="0.85" position="0.82 1.25 0"      rotation="0 90 0"  material="emissive:#00cc44; emissiveIntensity:2.2; transparent:true; opacity:0.80; side:double;"></a-plane>
+      <a-plane color="#33ff66" width="0.65" height="0.85" position="0.58 1.25 0.58"   rotation="0 45 0"  material="emissive:#00cc44; emissiveIntensity:2.2; transparent:true; opacity:0.80; side:double;"></a-plane>
+      <a-plane color="#33ff66" width="0.65" height="0.85" position="0 1.25 0.82"      rotation="0 0 0"   material="emissive:#00cc44; emissiveIntensity:2.2; transparent:true; opacity:0.80; side:double;"></a-plane>
+      <a-plane color="#33ff66" width="0.65" height="0.85" position="-0.58 1.25 0.58"  rotation="0 -45 0" material="emissive:#00cc44; emissiveIntensity:2.2; transparent:true; opacity:0.80; side:double;"></a-plane>
+      <a-plane color="#33ff66" width="0.65" height="0.85" position="-0.82 1.25 0"     rotation="0 90 0"  material="emissive:#00cc44; emissiveIntensity:2.2; transparent:true; opacity:0.80; side:double;"></a-plane>
+      <a-plane color="#33ff66" width="0.65" height="0.85" position="-0.58 1.25 -0.58" rotation="0 45 0"  material="emissive:#00cc44; emissiveIntensity:2.2; transparent:true; opacity:0.80; side:double;"></a-plane>
+      <a-plane color="#33ff66" width="0.65" height="0.85" position="0 1.25 -0.82"     rotation="0 0 0"   material="emissive:#00cc44; emissiveIntensity:2.2; transparent:true; opacity:0.80; side:double;"></a-plane>
+      <a-plane color="#33ff66" width="0.65" height="0.85" position="0.58 1.25 -0.58"  rotation="0 -45 0" material="emissive:#00cc44; emissiveIntensity:2.2; transparent:true; opacity:0.80; side:double;"></a-plane>
 
-  <script>
-    (function() {
-      const scene = document.querySelector('a-scene');
-      const ui = document.getElementById('ui');
-      
-      // when entering VR/AR, hide UI overlay
-      scene.addEventListener('enter-vr', function() {
-        ui.style.opacity = '0';
-        setTimeout(() => { ui.style.display = 'none'; }, 300);
-      });
-      
-      scene.addEventListener('exit-vr', function() {
-        ui.style.display = 'block';
-        setTimeout(() => { ui.style.opacity = '1'; }, 50);
-      });
-    })();
-  </script>
+      <!-- Dark carved band between tier1 and tier2 -->
+      <a-torus color="#0a150a" radius="0.88" tube="0.055" position="0 0.78 0" rotation="90 0 0"
+        material="emissive:#001100; emissiveIntensity:0.2; metalness:0.9;">
+      </a-torus>
+      <a-cylinder color="#0d1a0d" radius="0.90" height="0.08" position="0 0.78 0"
+        material="emissive:#001100; emissiveIntensity:0.2; metalness:0.8;">
+      </a-cylinder>
+
+      <!-- ═══════════════════════════════════════
+           TIER 3: MIDDLE DRUM + SIDE LANTERNS
+           Cylindrical drum section
+           + 8 small blue lanterns on arms
+      ═══════════════════════════════════════ -->
+
+      <!-- Middle drum dark frame -->
+      <a-cylinder color="#0a150a" radius="0.52" height="0.42" position="0 0.52 0"
+        material="emissive:#001100; emissiveIntensity:0.2; metalness:0.7;">
+      </a-cylinder>
+
+      <!-- Drum green glow panels -->
+      <a-plane color="#44ff77" width="0.38" height="0.38" position="0.52 0.52 0"      rotation="0 90 0"  material="emissive:#00cc44; emissiveIntensity:2.0; transparent:true; opacity:0.82; side:double;"></a-plane>
+      <a-plane color="#44ff77" width="0.38" height="0.38" position="0.368 0.52 0.368" rotation="0 45 0"  material="emissive:#00cc44; emissiveIntensity:2.0; transparent:true; opacity:0.82; side:double;"></a-plane>
+      <a-plane color="#44ff77" width="0.38" height="0.38" position="0 0.52 0.52"      rotation="0 0 0"   material="emissive:#00cc44; emissiveIntensity:2.0; transparent:true; opacity:0.82; side:double;"></a-plane>
+      <a-plane color="#44ff77" width="0.38" height="0.38" position="-0.368 0.52 0.368" rotation="0 -45 0" material="emissive:#00cc44; emissiveIntensity:2.0; transparent:true; opacity:0.82; side:double;"></a-plane>
+      <a-plane color="#44ff77" width="0.38" height="0.38" position="-0.52 0.52 0"     rotation="0 90 0"  material="emissive:#00cc44; emissiveIntensity:2.0; transparent:true; opacity:0.82; side:double;"></a-plane>
+      <a-plane color="#44ff77" width="0.38" height="0.38" position="-0.368 0.52 -0.368" rotation="0 45 0" material="emissive:#00cc44; emissiveIntensity:2.0; transparent:true; opacity:0.82; side:double;"></a-plane>
+      <a-plane color="#44ff77" width="0.38" height="0.38" position="0 0.52 -0.52"     rotation="0 0 0"   material="emissive:#00cc44; emissiveIntensity:2.0; transparent:true; opacity:0.82; side:double;"></a-plane>
+      <a-plane color="#44ff77" width="0.38" height="0.38" position="0.368 0.52 -0.368" rotation="0 -45 0" material="emissive:#00cc44; emissiveIntensity:2.0; transparent:true; opacity:0.82; side:double;"></a-plane>
+
+      <!-- Carved decorative bands on drum -->
+      <a-torus color="#0a150a" radius="0.53" tube="0.03" position="0 0.70 0" rotation="90 0 0" material="emissive:#001100; emissiveIntensity:0.3; metalness:0.9;"></a-torus>
+      <a-torus color="#0a150a" radius="0.53" tube="0.03" position="0 0.34 0" rotation="90 0 0" material="emissive:#001100; emissiveIntensity:0.3; metalness:0.9;"></a-torus>
+
+      <!-- ── 8 SIDE LANTERNS on horizontal arms ── -->
+      <!-- Each: arm rod + blue cylindrical lantern + pom-pom + blue fringe -->
+      <!-- Side lantern macro placed at 8 positions -->
+
+      <!-- Helper: arm + mini lantern. Placed at radius ~0.92 from centre -->
+      <!-- Lantern 1 (0°) -->
+      <a-entity position="0 0.52 0">
+        <a-cylinder color="#c8a000" radius="0.015" height="0.44" position="0.74 0 0" rotation="0 0 90" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <!-- Mini lantern body -->
+        <a-cylinder color="#0a0a2a" radius="0.13" height="0.30" position="0.96 0 0" material="emissive:#000022; emissiveIntensity:0.3; metalness:0.6;"></a-cylinder>
+        <!-- Blue glow panels on mini lantern (4 sides) -->
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="1.09 0 0"    rotation="0 90 0"  material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.96 0 0.13" rotation="0 0 0"   material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.83 0 0"    rotation="0 90 0"  material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.96 0 -0.13" rotation="0 0 0"  material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <!-- Cap top/bottom -->
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 0.17 0" material="emissive:#001100; emissiveIntensity:0.2; metalness:0.8;"></a-cylinder>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 -0.17 0" material="emissive:#001100; emissiveIntensity:0.2; metalness:0.8;"></a-cylinder>
+        <!-- Blue fringe tassels -->
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.88 -0.27 0"  material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:1800; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.96 -0.27 0"  material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:2000; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="1.04 -0.27 0"  material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:1600; dir:alternate;"></a-cylinder>
+        <!-- Blue pom-pom below lantern -->
+        <a-sphere color="#1133bb" radius="0.055" position="0.96 -0.48 0" material="emissive:#0022aa; emissiveIntensity:0.8;"
+          animation="property:position; from:0.96 -0.46 0; to:0.96 -0.52 0; loop:true; dur:1500; dir:alternate; easing:easeInOutSine">
+        </a-sphere>
+      </a-entity>
+
+      <!-- Lantern 2 (45°) -->
+      <a-entity position="0 0.52 0" rotation="0 45 0">
+        <a-cylinder color="#c8a000" radius="0.015" height="0.44" position="0.74 0 0" rotation="0 0 90" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-cylinder color="#0a0a2a" radius="0.13" height="0.30" position="0.96 0 0" material="emissive:#000022; emissiveIntensity:0.3; metalness:0.6;"></a-cylinder>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="1.09 0 0"    rotation="0 90 0"  material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.96 0 0.13" rotation="0 0 0"   material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.83 0 0"    rotation="0 90 0"  material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.96 0 -0.13" rotation="0 0 0"  material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 0.17 0" material="emissive:#001100; emissiveIntensity:0.2; metalness:0.8;"></a-cylinder>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 -0.17 0" material="emissive:#001100; emissiveIntensity:0.2; metalness:0.8;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.88 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:1900; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.96 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:1700; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="1.04 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:2100; dir:alternate;"></a-cylinder>
+        <a-sphere color="#1133bb" radius="0.055" position="0.96 -0.48 0" material="emissive:#0022aa; emissiveIntensity:0.8;"
+          animation="property:position; from:0.96 -0.46 0; to:0.96 -0.52 0; loop:true; dur:1700; dir:alternate; easing:easeInOutSine">
+        </a-sphere>
+      </a-entity>
+
+      <!-- Lanterns 3-8 (90°, 135°, 180°, 225°, 270°, 315°) — same template, different rotation -->
+      <a-entity position="0 0.52 0" rotation="0 90 0">
+        <a-cylinder color="#c8a000" radius="0.015" height="0.44" position="0.74 0 0" rotation="0 0 90" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-cylinder color="#0a0a2a" radius="0.13" height="0.30" position="0.96 0 0" material="emissive:#000022; emissiveIntensity:0.3;"></a-cylinder>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="1.09 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.83 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 0.17 0" material="metalness:0.8;"></a-cylinder>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 -0.17 0" material="metalness:0.8;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.92 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:2200; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="1.00 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:1650; dir:alternate;"></a-cylinder>
+        <a-sphere color="#1133bb" radius="0.055" position="0.96 -0.48 0" material="emissive:#0022aa; emissiveIntensity:0.8;" animation="property:position; from:0.96 -0.46 0; to:0.96 -0.52 0; loop:true; dur:1400; dir:alternate;"></a-sphere>
+      </a-entity>
+      <a-entity position="0 0.52 0" rotation="0 135 0">
+        <a-cylinder color="#c8a000" radius="0.015" height="0.44" position="0.74 0 0" rotation="0 0 90" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-cylinder color="#0a0a2a" radius="0.13" height="0.30" position="0.96 0 0" material="emissive:#000022; emissiveIntensity:0.3;"></a-cylinder>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="1.09 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.83 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 0.17 0"></a-cylinder>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 -0.17 0"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.92 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:1750; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="1.00 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:2050; dir:alternate;"></a-cylinder>
+        <a-sphere color="#1133bb" radius="0.055" position="0.96 -0.48 0" material="emissive:#0022aa; emissiveIntensity:0.8;" animation="property:position; from:0.96 -0.46 0; to:0.96 -0.52 0; loop:true; dur:1900; dir:alternate;"></a-sphere>
+      </a-entity>
+      <a-entity position="0 0.52 0" rotation="0 180 0">
+        <a-cylinder color="#c8a000" radius="0.015" height="0.44" position="0.74 0 0" rotation="0 0 90" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-cylinder color="#0a0a2a" radius="0.13" height="0.30" position="0.96 0 0" material="emissive:#000022; emissiveIntensity:0.3;"></a-cylinder>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="1.09 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.83 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 0.17 0"></a-cylinder>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 -0.17 0"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.92 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:2300; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="1.00 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:1550; dir:alternate;"></a-cylinder>
+        <a-sphere color="#1133bb" radius="0.055" position="0.96 -0.48 0" material="emissive:#0022aa; emissiveIntensity:0.8;" animation="property:position; from:0.96 -0.46 0; to:0.96 -0.52 0; loop:true; dur:1600; dir:alternate;"></a-sphere>
+      </a-entity>
+      <a-entity position="0 0.52 0" rotation="0 225 0">
+        <a-cylinder color="#c8a000" radius="0.015" height="0.44" position="0.74 0 0" rotation="0 0 90" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-cylinder color="#0a0a2a" radius="0.13" height="0.30" position="0.96 0 0" material="emissive:#000022; emissiveIntensity:0.3;"></a-cylinder>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="1.09 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.83 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 0.17 0"></a-cylinder>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 -0.17 0"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.92 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:1850; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="1.00 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:2150; dir:alternate;"></a-cylinder>
+        <a-sphere color="#1133bb" radius="0.055" position="0.96 -0.48 0" material="emissive:#0022aa; emissiveIntensity:0.8;" animation="property:position; from:0.96 -0.46 0; to:0.96 -0.52 0; loop:true; dur:2000; dir:alternate;"></a-sphere>
+      </a-entity>
+      <a-entity position="0 0.52 0" rotation="0 270 0">
+        <a-cylinder color="#c8a000" radius="0.015" height="0.44" position="0.74 0 0" rotation="0 0 90" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-cylinder color="#0a0a2a" radius="0.13" height="0.30" position="0.96 0 0" material="emissive:#000022; emissiveIntensity:0.3;"></a-cylinder>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="1.09 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.83 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 0.17 0"></a-cylinder>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 -0.17 0"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.92 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:1450; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="1.00 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:2250; dir:alternate;"></a-cylinder>
+        <a-sphere color="#1133bb" radius="0.055" position="0.96 -0.48 0" material="emissive:#0022aa; emissiveIntensity:0.8;" animation="property:position; from:0.96 -0.46 0; to:0.96 -0.52 0; loop:true; dur:1750; dir:alternate;"></a-sphere>
+      </a-entity>
+      <a-entity position="0 0.52 0" rotation="0 315 0">
+        <a-cylinder color="#c8a000" radius="0.015" height="0.44" position="0.74 0 0" rotation="0 0 90" material="emissive:#886600; emissiveIntensity:0.5; metalness:0.9;"></a-cylinder>
+        <a-cylinder color="#0a0a2a" radius="0.13" height="0.30" position="0.96 0 0" material="emissive:#000022; emissiveIntensity:0.3;"></a-cylinder>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="1.09 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-plane color="#2244ff" width="0.19" height="0.26" position="0.83 0 0" rotation="0 90 0" material="emissive:#1133cc; emissiveIntensity:2.5; transparent:true; opacity:0.85; side:double;"></a-plane>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 0.17 0"></a-cylinder>
+        <a-cylinder color="#1a1a1a" radius="0.13" height="0.04" position="0.96 -0.17 0"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="0.92 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:2000; dir:alternate;"></a-cylinder>
+        <a-cylinder color="#1144cc" radius="0.006" height="0.18" position="1.00 -0.27 0" material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:1950; dir:alternate;"></a-cylinder>
+        <a-sphere color="#1133bb" radius="0.055" position="0.96 -0.48 0" material="emissive:#0022aa; emissiveIntensity:0.8;" animation="property:position; from:0.96 -0.46 0; to:0.96 -0.52 0; loop:true; dur:1850; dir:alternate;"></a-sphere>
+      </a-entity>
+
+      <!-- ═══════════════════════════════════════
+           TIER 4: WAIST CARVED BAND
+      ═══════════════════════════════════════ -->
+      <a-cylinder color="#0a150a" radius="0.56" height="0.12" position="0 0.28 0"
+        material="emissive:#001100; emissiveIntensity:0.3; metalness:0.8;">
+      </a-cylinder>
+      <a-torus color="#0a150a" radius="0.57" tube="0.028" position="0 0.34 0" rotation="90 0 0" material="emissive:#003300; emissiveIntensity:0.3; metalness:0.9;"></a-torus>
+      <a-torus color="#0a150a" radius="0.57" tube="0.028" position="0 0.22 0" rotation="90 0 0" material="emissive:#003300; emissiveIntensity:0.3; metalness:0.9;"></a-torus>
+      <!-- Pom-poms on waist band (8) -->
+      <a-sphere color="#1133bb" radius="0.045" position="0.57 0.28 0"      material="emissive:#0022aa; emissiveIntensity:0.7;" animation="property:scale; from:1 1 1; to:1.2 1.2 1.2; loop:true; dur:1200; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.045" position="0.403 0.28 0.403" material="emissive:#0022aa; emissiveIntensity:0.7;" animation="property:scale; from:1 1 1; to:1.2 1.2 1.2; loop:true; dur:1400; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.045" position="0 0.28 0.57"      material="emissive:#0022aa; emissiveIntensity:0.7;" animation="property:scale; from:1 1 1; to:1.2 1.2 1.2; loop:true; dur:1100; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.045" position="-0.403 0.28 0.403" material="emissive:#0022aa; emissiveIntensity:0.7;" animation="property:scale; from:1 1 1; to:1.2 1.2 1.2; loop:true; dur:1600; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.045" position="-0.57 0.28 0"     material="emissive:#0022aa; emissiveIntensity:0.7;" animation="property:scale; from:1 1 1; to:1.2 1.2 1.2; loop:true; dur:1300; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.045" position="-0.403 0.28 -0.403" material="emissive:#0022aa; emissiveIntensity:0.7;" animation="property:scale; from:1 1 1; to:1.2 1.2 1.2; loop:true; dur:1500; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.045" position="0 0.28 -0.57"     material="emissive:#0022aa; emissiveIntensity:0.7;" animation="property:scale; from:1 1 1; to:1.2 1.2 1.2; loop:true; dur:1250; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.045" position="0.403 0.28 -0.403" material="emissive:#0022aa; emissiveIntensity:0.7;" animation="property:scale; from:1 1 1; to:1.2 1.2 1.2; loop:true; dur:1700; dir:alternate;"></a-sphere>
+
+      <!-- ═══════════════════════════════════════
+           TIER 5: LOWER BULGE (diamond/belly)
+           The wide octagonal belly with colorful flower patterns
+           Multi-color: green + purple + yellow patches
+      ═══════════════════════════════════════ -->
+
+      <!-- Lower bulge panels (8 sides, wide) — color-shifted like the photo -->
+      <a-plane color="#33ff55" width="0.78" height="0.72" position="0.88 -0.28 0"       rotation="0 90 0"  material="emissive:#00cc33; emissiveIntensity:1.8; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#aa44ff" width="0.78" height="0.72" position="0.622 -0.28 0.622"  rotation="0 45 0"  material="emissive:#8800ff; emissiveIntensity:1.8; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#33ff55" width="0.78" height="0.72" position="0 -0.28 0.88"       rotation="0 0 0"   material="emissive:#00cc33; emissiveIntensity:1.8; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#ffee22" width="0.78" height="0.72" position="-0.622 -0.28 0.622" rotation="0 -45 0" material="emissive:#ccbb00; emissiveIntensity:1.8; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#33ff55" width="0.78" height="0.72" position="-0.88 -0.28 0"      rotation="0 90 0"  material="emissive:#00cc33; emissiveIntensity:1.8; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#aa44ff" width="0.78" height="0.72" position="-0.622 -0.28 -0.622" rotation="0 45 0" material="emissive:#8800ff; emissiveIntensity:1.8; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#33ff55" width="0.78" height="0.72" position="0 -0.28 -0.88"      rotation="0 0 0"   material="emissive:#00cc33; emissiveIntensity:1.8; transparent:true; opacity:0.85; side:double;"></a-plane>
+      <a-plane color="#ffee22" width="0.78" height="0.72" position="0.622 -0.28 -0.622" rotation="0 -45 0" material="emissive:#ccbb00; emissiveIntensity:1.8; transparent:true; opacity:0.85; side:double;"></a-plane>
+
+      <!-- Lower bulge frame ribs -->
+      <a-cylinder color="#0a150a" radius="0.022" height="0.80" position="0.88 -0.28 0"       material="emissive:#002200; emissiveIntensity:0.3; metalness:0.8;"></a-cylinder>
+      <a-cylinder color="#0a150a" radius="0.022" height="0.80" position="0.622 -0.28 0.622"  material="emissive:#002200; emissiveIntensity:0.3; metalness:0.8;"></a-cylinder>
+      <a-cylinder color="#0a150a" radius="0.022" height="0.80" position="0 -0.28 0.88"       material="emissive:#002200; emissiveIntensity:0.3; metalness:0.8;"></a-cylinder>
+      <a-cylinder color="#0a150a" radius="0.022" height="0.80" position="-0.622 -0.28 0.622" material="emissive:#002200; emissiveIntensity:0.3; metalness:0.8;"></a-cylinder>
+      <a-cylinder color="#0a150a" radius="0.022" height="0.80" position="-0.88 -0.28 0"      material="emissive:#002200; emissiveIntensity:0.3; metalness:0.8;"></a-cylinder>
+      <a-cylinder color="#0a150a" radius="0.022" height="0.80" position="-0.622 -0.28 -0.622" material="emissive:#002200; emissiveIntensity:0.3; metalness:0.8;"></a-cylinder>
+      <a-cylinder color="#0a150a" radius="0.022" height="0.80" position="0 -0.28 -0.88"      material="emissive:#002200; emissiveIntensity:0.3; metalness:0.8;"></a-cylinder>
+      <a-cylinder color="#0a150a" radius="0.022" height="0.80" position="0.622 -0.28 -0.622" material="emissive:#002200; emissiveIntensity:0.3; metalness:0.8;"></a-cylinder>
+
+      <!-- Mid band on lower bulge (dark carved) -->
+      <a-cylinder color="#0a150a" radius="0.91" height="0.07" position="0 -0.28 0"
+        material="emissive:#002200; emissiveIntensity:0.2; metalness:0.8; transparent:true; opacity:0.9;">
+      </a-cylinder>
+      <a-torus color="#1a2a1a" radius="0.90" tube="0.032" position="0 -0.22 0" rotation="90 0 0" material="emissive:#004400; emissiveIntensity:0.3; metalness:0.9;"></a-torus>
+      <a-torus color="#1a2a1a" radius="0.90" tube="0.032" position="0 -0.34 0" rotation="90 0 0" material="emissive:#004400; emissiveIntensity:0.3; metalness:0.9;"></a-torus>
+
+      <!-- ═══════════════════════════════════════
+           TIER 6: BASE PLATFORM
+           Wide octagonal base with fringe
+      ═══════════════════════════════════════ -->
+
+      <!-- Base disc (dark, wide) -->
+      <a-cylinder color="#0a150a" radius="1.08" height="0.10" position="0 -0.72 0"
+        material="emissive:#001100; emissiveIntensity:0.2; metalness:0.7;">
+      </a-cylinder>
+      <a-torus color="#1a2a1a" radius="1.07" tube="0.035" position="0 -0.67 0" rotation="90 0 0" material="emissive:#004400; emissiveIntensity:0.3; metalness:0.9;"></a-torus>
+      <a-torus color="#1a2a1a" radius="1.07" tube="0.035" position="0 -0.77 0" rotation="90 0 0" material="emissive:#004400; emissiveIntensity:0.3; metalness:0.9;"></a-torus>
+
+      <!-- Base glow (projected light on platform) -->
+      <a-circle color="#44ff44" radius="1.05" rotation="-90 0 0" position="0 -0.66 0"
+        material="emissive:#22cc22; emissiveIntensity:0.6; transparent:true; opacity:0.22;"
+        animation="property:material.emissiveIntensity; from:0.4; to:1.0; loop:true; dur:2000; dir:alternate; easing:easeInOutSine">
+      </a-circle>
+
+      <!-- Flower pattern projection dots (multicolor, scattered on base) -->
+      <a-sphere color="#ff44ff" radius="0.03" position="0.6 -0.65 0.3"   material="emissive:#dd00dd; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:900; dir:alternate;"></a-sphere>
+      <a-sphere color="#ffff44" radius="0.03" position="-0.5 -0.65 0.4"  material="emissive:#dddd00; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:1100; dir:alternate;"></a-sphere>
+      <a-sphere color="#44ffff" radius="0.03" position="0.3 -0.65 -0.6"  material="emissive:#00dddd; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:750; dir:alternate;"></a-sphere>
+      <a-sphere color="#ff44ff" radius="0.025" position="-0.7 -0.65 -0.2" material="emissive:#dd00dd; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:1300; dir:alternate;"></a-sphere>
+      <a-sphere color="#ffff44" radius="0.025" position="0.2 -0.65 0.7"  material="emissive:#dddd00; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:800; dir:alternate;"></a-sphere>
+      <a-sphere color="#44ff88" radius="0.025" position="-0.3 -0.65 -0.7" material="emissive:#00cc44; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:950; dir:alternate;"></a-sphere>
+      <a-sphere color="#ff8844" radius="0.025" position="0.75 -0.65 -0.4" material="emissive:#cc4400; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:1050; dir:alternate;"></a-sphere>
+      <a-sphere color="#ff44ff" radius="0.02"  position="-0.6 -0.65 0.55" material="emissive:#dd00dd; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:700; dir:alternate;"></a-sphere>
+      <a-sphere color="#44ffff" radius="0.02"  position="0.5 -0.65 -0.55" material="emissive:#00dddd; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:1200; dir:alternate;"></a-sphere>
+      <a-sphere color="#ffff44" radius="0.02"  position="-0.2 -0.65 0.8"  material="emissive:#dddd00; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:850; dir:alternate;"></a-sphere>
+      <a-sphere color="#ff44ff" radius="0.02"  position="0.8 -0.65 0.15"  material="emissive:#dd00dd; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:1000; dir:alternate;"></a-sphere>
+      <a-sphere color="#44ff88" radius="0.02"  position="-0.85 -0.65 -0.1" material="emissive:#00cc44; emissiveIntensity:2;" animation="property:material.emissiveIntensity; from:1; to:3; loop:true; dur:920; dir:alternate;"></a-sphere>
+
+      <!-- Blue fringe on base (18 tassels around perimeter) -->
+      <a-cylinder color="#1144cc" radius="0.008" height="0.22" position="1.07 -0.88 0"       material="emissive:#0033aa; emissiveIntensity:0.6;" animation="property:rotation; from:0 0 -10; to:0 0 10; loop:true; dur:1800; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#1144cc" radius="0.008" height="0.22" position="0.757 -0.88 0.757"  material="emissive:#0033aa; emissiveIntensity:0.6;" animation="property:rotation; from:0 0 10; to:0 0 -10; loop:true; dur:2000; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#1144cc" radius="0.008" height="0.22" position="0 -0.88 1.07"       material="emissive:#0033aa; emissiveIntensity:0.6;" animation="property:rotation; from:0 0 -10; to:0 0 10; loop:true; dur:1600; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#1144cc" radius="0.008" height="0.22" position="-0.757 -0.88 0.757" material="emissive:#0033aa; emissiveIntensity:0.6;" animation="property:rotation; from:0 0 10; to:0 0 -10; loop:true; dur:2200; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#1144cc" radius="0.008" height="0.22" position="-1.07 -0.88 0"      material="emissive:#0033aa; emissiveIntensity:0.6;" animation="property:rotation; from:0 0 -10; to:0 0 10; loop:true; dur:1900; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#1144cc" radius="0.008" height="0.22" position="-0.757 -0.88 -0.757" material="emissive:#0033aa; emissiveIntensity:0.6;" animation="property:rotation; from:0 0 10; to:0 0 -10; loop:true; dur:1700; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#1144cc" radius="0.008" height="0.22" position="0 -0.88 -1.07"      material="emissive:#0033aa; emissiveIntensity:0.6;" animation="property:rotation; from:0 0 -10; to:0 0 10; loop:true; dur:2100; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#1144cc" radius="0.008" height="0.22" position="0.757 -0.88 -0.757" material="emissive:#0033aa; emissiveIntensity:0.6;" animation="property:rotation; from:0 0 10; to:0 0 -10; loop:true; dur:1500; dir:alternate;"></a-cylinder>
+      <!-- Between fringe -->
+      <a-cylinder color="#2255dd" radius="0.007" height="0.20" position="1.07 -0.88 0.35"    material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:1850; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#2255dd" radius="0.007" height="0.20" position="0.35 -0.88 1.07"    material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:2050; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#2255dd" radius="0.007" height="0.20" position="-0.35 -0.88 1.07"   material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:1650; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#2255dd" radius="0.007" height="0.20" position="-1.07 -0.88 0.35"   material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:2150; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#2255dd" radius="0.007" height="0.20" position="-1.07 -0.88 -0.35"  material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:1750; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#2255dd" radius="0.007" height="0.20" position="-0.35 -0.88 -1.07"  material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:1950; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#2255dd" radius="0.007" height="0.20" position="0.35 -0.88 -1.07"   material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 -8; to:0 0 8; loop:true; dur:2250; dir:alternate;"></a-cylinder>
+      <a-cylinder color="#2255dd" radius="0.007" height="0.20" position="1.07 -0.88 -0.35"   material="emissive:#0033aa; emissiveIntensity:0.5;" animation="property:rotation; from:0 0 8; to:0 0 -8; loop:true; dur:1550; dir:alternate;"></a-cylinder>
+      <!-- Corner pom-poms on base -->
+      <a-sphere color="#1133bb" radius="0.07" position="1.07 -0.88 0"      material="emissive:#0022aa; emissiveIntensity:0.9;" animation="property:position; from:1.07 -0.86 0; to:1.07 -0.92 0; loop:true; dur:1800; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.07" position="0 -0.88 1.07"      material="emissive:#0022aa; emissiveIntensity:0.9;" animation="property:position; from:0 -0.86 1.07; to:0 -0.92 1.07; loop:true; dur:2000; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.07" position="-1.07 -0.88 0"     material="emissive:#0022aa; emissiveIntensity:0.9;" animation="property:position; from:-1.07 -0.86 0; to:-1.07 -0.92 0; loop:true; dur:1600; dir:alternate;"></a-sphere>
+      <a-sphere color="#1133bb" radius="0.07" position="0 -0.88 -1.07"     material="emissive:#0022aa; emissiveIntensity:0.9;" animation="property:position; from:0 -0.86 -1.07; to:0 -0.92 -1.07; loop:true; dur:2200; dir:alternate;"></a-sphere>
+
+      <!-- ═══════════════════════════════════════
+           LIGHTS
+      ═══════════════════════════════════════ -->
+      <!-- Main green inner glow -->
+      <a-light type="point" color="#00ff66" intensity="3" distance="6" position="0 0.8 0"
+        animation="property:intensity; from:2; to:5; loop:true; dur:1800; dir:alternate; easing:easeInOutSine">
+      </a-light>
+      <!-- Blue accent -->
+      <a-light type="point" color="#2244ff" intensity="1.5" distance="4" position="0 0.52 0"
+        animation="property:intensity; from:1; to:3; loop:true; dur:1200; dir:alternate; easing:easeInOutSine">
+      </a-light>
+      <!-- Multi-color lower light (simulates floor projection) -->
+      <a-light type="point" color="#aa44ff" intensity="1.2" distance="3" position="0 -0.5 0"
+        animation="property:intensity; from:0.8; to:2; loop:true; dur:2500; dir:alternate; easing:easeInOutSine">
+      </a-light>
+      <a-light type="ambient" color="#112211" intensity="0.4"></a-light>
+
+    </a-entity><!-- end spin -->
+  </a-entity><!-- end lantern-anchor -->
+
+  <a-entity camera></a-entity>
+</a-scene>
+
+<script>
+  const sceneEl = document.querySelector('a-scene');
+  const uiEl    = document.getElementById('ui');
+  sceneEl.addEventListener('enter-vr', () => uiEl.style.display = 'none');
+  sceneEl.addEventListener('exit-vr',  () => uiEl.style.display = 'block');
+</script>
 </body>
 </html>
